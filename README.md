@@ -563,3 +563,152 @@ public class BuilderPatternDemo {
 The Builder pattern is a powerful tool for constructing complex objects with numerous optional parameters. It improves code maintainability, readability, and ensures that objects are constructed in a controlled manner.
 
 ----------------------------------------------------------------------------------
+
+## Prototype Design Pattern
+
+The Prototype design pattern is a creational pattern that allows objects to be cloned to produce new objects. Instead of creating new instances from scratch, the Prototype pattern provides a way to copy or clone existing objects, thus enhancing performance and simplifying object creation when the cost of creating a new instance is more expensive than copying an existing one.
+
+### When to Use Prototype
+
+The Prototype pattern is useful in the following situations:
+
+1. **Expensive Object Creation**: When creating an instance of a class is resource-intensive or time-consuming.
+
+2. **Avoiding Subclassing**: When you want to avoid a proliferation of subclasses in a factory hierarchy.
+
+3. **Dynamic Object Creation**: When the exact type of the objects to be created is determined at runtime.
+
+4. **Object Caching**: When you need to cache and reuse objects to improve performance.
+
+### Prototype Pattern Implementation in Java
+
+Here's an example of how to implement the Prototype pattern in Java:
+
+```java
+import java.util.HashMap;
+import java.util.Map;
+
+// Step 1: Create a Prototype interface
+interface Prototype {
+    Prototype clone();
+}
+
+// Step 2: Create concrete classes implementing the Prototype interface
+class Rectangle implements Prototype {
+    private int width;
+    private int height;
+
+    public Rectangle(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    @Override
+    public Rectangle clone() {
+        return new Rectangle(width, height);
+    }
+
+    @Override
+    public String toString() {
+        return "Rectangle{" +
+                "width=" + width +
+                ", height=" + height +
+                '}';
+    }
+}
+
+class Circle implements Prototype {
+    private int radius;
+
+    public Circle(int radius) {
+        this.radius = radius;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    @Override
+    public Circle clone() {
+        return new Circle(radius);
+    }
+
+    @Override
+    public String toString() {
+        return "Circle{" +
+                "radius=" + radius +
+                '}';
+    }
+}
+
+// Step 3: Create a Prototype Registry
+class PrototypeRegistry {
+    private Map<String, Prototype> prototypes = new HashMap<>();
+
+    public void addPrototype(String key, Prototype prototype) {
+        prototypes.put(key, prototype);
+    }
+
+    public Prototype getPrototype(String key) {
+        return prototypes.get(key).clone();
+    }
+}
+```
+
+### Explanation
+
+1. **Prototype Interface**: The `Prototype` interface declares a `clone()` method for cloning objects.
+
+2. **Concrete Prototypes**: Classes like `Rectangle` and `Circle` implement the `Prototype` interface and define their cloning logic in the `clone()` method.
+
+3. **Prototype Registry**: The `PrototypeRegistry` class holds a collection of prototype objects. It allows clients to clone objects using the `getPrototype()` method, which returns a copy of the registered prototype.
+
+### Example Usage
+
+Here's how you can use the Prototype pattern:
+
+```java
+public class PrototypePatternDemo {
+    public static void main(String[] args) {
+        // Create a Prototype Registry
+        PrototypeRegistry registry = new PrototypeRegistry();
+
+        // Add prototypes to the registry
+        registry.addPrototype("Large Rectangle", new Rectangle(100, 50));
+        registry.addPrototype("Small Circle", new Circle(10));
+
+        // Clone objects from the registry
+        Rectangle clonedRectangle = (Rectangle) registry.getPrototype("Large Rectangle");
+        Circle clonedCircle = (Circle) registry.getPrototype("Small Circle");
+
+        System.out.println(clonedRectangle); // Output: Rectangle{width=100, height=50}
+        System.out.println(clonedCircle);    // Output: Circle{radius=10}
+    }
+}
+```
+
+### Explanation
+
+- **Cloning Objects**: The `PrototypeRegistry` is used to store prototypes and retrieve clones of these prototypes. Clients can get copies of objects without knowing the details of their creation.
+
+- **Decoupling**: The Prototype pattern decouples the client code from the specifics of the object creation process.
+
+### Considerations
+
+- **Cloning Complexity**: The Prototype pattern simplifies object creation but can be complex to implement if objects have complex state or deep copy requirements.
+
+- **Performance**: Cloning objects can improve performance when creating new instances is expensive.
+
+- **Shallow vs. Deep Copy**: It's essential to decide whether to perform shallow or deep copying, depending on the use case. Deep copying may require handling mutable objects or collections within the prototype.
+
+The Prototype pattern is particularly effective when you need to create many similar objects, optimize resource usage, or simplify complex object creation processes. It provides flexibility and decouples the client code from concrete classes, allowing for dynamic object creation and reusability.
+
+-----------------------------------------------------------------------------------
