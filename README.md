@@ -712,3 +712,130 @@ public class PrototypePatternDemo {
 The Prototype pattern is particularly effective when you need to create many similar objects, optimize resource usage, or simplify complex object creation processes. It provides flexibility and decouples the client code from concrete classes, allowing for dynamic object creation and reusability.
 
 -----------------------------------------------------------------------------------
+
+## Adapter Design Pattern
+
+The Adapter design pattern is a structural pattern that allows incompatible interfaces to work together. It acts as a bridge between two incompatible interfaces by wrapping an existing class with a new interface. The Adapter pattern is particularly useful when you need to integrate a class into your application that doesn’t match the existing interfaces.
+
+### When to Use Adapter
+
+The Adapter pattern is useful in the following situations:
+
+1. **Incompatible Interfaces**: When you want to use an existing class but its interface does not match the one you need.
+
+2. **Integration with Legacy Code**: When you need to integrate with legacy code or third-party libraries with incompatible interfaces.
+
+3. **Multiple Interface Implementations**: When you want to reuse an existing class in a different context with a different interface.
+
+4. **Target Interface Adherence**: When you want to ensure that your class conforms to a particular interface without altering the original class.
+
+### Adapter Pattern Implementation in Java
+
+Here's an example of how to implement the Adapter pattern in Java:
+
+```java
+// Step 1: Define the target interface
+interface MediaPlayer {
+    void play(String audioType, String fileName);
+}
+
+// Step 2: Create an existing class with an incompatible interface
+class AdvancedMediaPlayer {
+    void playVlc(String fileName) {
+        System.out.println("Playing VLC file. Name: " + fileName);
+    }
+
+    void playMp4(String fileName) {
+        System.out.println("Playing MP4 file. Name: " + fileName);
+    }
+}
+
+// Step 3: Create the adapter class implementing the target interface
+class MediaAdapter implements MediaPlayer {
+    private AdvancedMediaPlayer advancedMusicPlayer;
+
+    public MediaAdapter(String audioType) {
+        if (audioType.equalsIgnoreCase("vlc")) {
+            advancedMusicPlayer = new AdvancedMediaPlayer();
+        } else if (audioType.equalsIgnoreCase("mp4")) {
+            advancedMusicPlayer = new AdvancedMediaPlayer();
+        }
+    }
+
+    @Override
+    public void play(String audioType, String fileName) {
+        if (audioType.equalsIgnoreCase("vlc")) {
+            advancedMusicPlayer.playVlc(fileName);
+        } else if (audioType.equalsIgnoreCase("mp4")) {
+            advancedMusicPlayer.playMp4(fileName);
+        }
+    }
+}
+
+// Step 4: Create a class using the adapter
+class AudioPlayer implements MediaPlayer {
+    private MediaAdapter mediaAdapter;
+
+    @Override
+    public void play(String audioType, String fileName) {
+        // Built-in support for mp3 music
+        if (audioType.equalsIgnoreCase("mp3")) {
+            System.out.println("Playing mp3 file. Name: " + fileName);
+        }
+        // MediaAdapter is providing support for other formats
+        else if (audioType.equalsIgnoreCase("vlc") || audioType.equalsIgnoreCase("mp4")) {
+            mediaAdapter = new MediaAdapter(audioType);
+            mediaAdapter.play(audioType, fileName);
+        } else {
+            System.out.println("Invalid media. " + audioType + " format not supported.");
+        }
+    }
+}
+```
+
+### Explanation
+
+1. **Target Interface**: `MediaPlayer` is the interface that the client expects to interact with. It has a `play()` method to handle audio playback.
+
+2. **Existing Class**: `AdvancedMediaPlayer` is an existing class with an incompatible interface. It has methods `playVlc()` and `playMp4()` for different media formats.
+
+3. **Adapter Class**: `MediaAdapter` implements the target interface (`MediaPlayer`) and uses an instance of `AdvancedMediaPlayer` to handle specific media formats. The adapter translates the calls from the `MediaPlayer` interface to the appropriate methods in `AdvancedMediaPlayer`.
+
+4. **Client Class**: `AudioPlayer` is a client class that uses the `MediaAdapter` to play various audio formats.
+
+### Example Usage
+
+Here's how you can use the Adapter pattern:
+
+```java
+public class AdapterPatternDemo {
+    public static void main(String[] args) {
+        AudioPlayer audioPlayer = new AudioPlayer();
+
+        audioPlayer.play("mp3", "song.mp3");
+        audioPlayer.play("mp4", "video.mp4");
+        audioPlayer.play("vlc", "movie.vlc");
+        audioPlayer.play("avi", "myMovie.avi");
+    }
+}
+```
+
+### Explanation
+
+- **Playing Audio**: The `AudioPlayer` class uses the `MediaAdapter` to play media files of different formats. If the format is not supported directly, it delegates the task to the adapter.
+
+- **Incompatible Interfaces**: The Adapter pattern allows the `AudioPlayer` to work with different media formats without modifying the `AdvancedMediaPlayer` class.
+
+### Considerations
+
+- **Single Responsibility**: The Adapter pattern adheres to the Single Responsibility Principle by separating the interface adaptation logic into its own class.
+
+- **Interface Mismatch**: It resolves interface mismatches by translating calls between the target interface and the existing class.
+
+- **Complexity**: Introducing an adapter class can add complexity to the codebase, especially if there are many methods to adapt.
+
+- **Performance**: There may be a slight performance overhead due to the additional layer of abstraction, but this is generally negligible.
+
+The Adapter pattern is an effective way to enable incompatible interfaces to work together, allowing you to reuse existing code without modification. It is widely used in scenarios where you need to integrate with third-party libraries or legacy systems with different interfaces.
+
+-----------------------------------------------------------------------------------
