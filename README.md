@@ -42,7 +42,7 @@ These design patterns are well-established solutions to common software design p
 
 -------------------------------------------------------------------------
 
-##Singleton Design Pattern
+## Singleton Design Pattern
 
 The Singleton design pattern is a creational pattern that ensures a class has only one instance and provides a global point of access to that instance. This pattern is useful when exactly one object is needed to coordinate actions across the system.
 
@@ -126,3 +126,114 @@ In this example, the `Singleton` class ensures that only one instance of the cla
 - **Testing**: Singleton can make testing difficult due to its global state. Dependency injection is often used to manage Singleton dependencies in unit tests.
 
 Overall, the Singleton pattern is a useful tool when you need to ensure that a class has only one instance, especially in situations requiring centralized control or access to a shared resource.
+
+
+--------------------------------------------------------------------------------
+
+## Factory Method Design Pattern
+
+The Factory Method design pattern is a creational pattern that defines an interface for creating objects but allows subclasses to alter the type of objects that will be created. This pattern promotes loose coupling by reducing the dependency of the code on specific classes.
+
+### When to Use Factory Method
+
+The Factory Method pattern is useful in situations where:
+
+1. **Decoupling Object Creation**: You want to decouple the creation of objects from their implementation so that the code can depend on an interface rather than a concrete class.
+
+2. **Object Creation Complexity**: When the process of creating an object is complex or involves multiple steps, a factory method can simplify the object creation process.
+
+3. **Dynamic Object Creation**: When objects need to be created at runtime based on specific conditions or input parameters.
+
+4. **Extensibility**: When you anticipate that new types of objects may be added to your system and want to make it easy to introduce new classes without changing existing code.
+
+### Factory Method Pattern Implementation in Java
+
+Here's an example of how to implement the Factory Method pattern in Java:
+
+```java
+// Step 1: Define a Product interface
+interface Product {
+    void use();
+}
+
+// Step 2: Implement concrete products
+class ConcreteProductA implements Product {
+    @Override
+    public void use() {
+        System.out.println("Using Concrete Product A");
+    }
+}
+
+class ConcreteProductB implements Product {
+    @Override
+    public void use() {
+        System.out.println("Using Concrete Product B");
+    }
+}
+
+// Step 3: Create an abstract Creator class
+abstract class Creator {
+    // Factory method to create products
+    public abstract Product createProduct();
+
+    // Other methods that use the product
+    public void someOperation() {
+        Product product = createProduct();
+        product.use();
+    }
+}
+
+// Step 4: Implement concrete creators
+class ConcreteCreatorA extends Creator {
+    @Override
+    public Product createProduct() {
+        return new ConcreteProductA();
+    }
+}
+
+class ConcreteCreatorB extends Creator {
+    @Override
+    public Product createProduct() {
+        return new ConcreteProductB();
+    }
+}
+```
+
+### Explanation
+
+1. **Product Interface**: The `Product` interface defines the type of objects that the factory method will create. It specifies a common interface for all products.
+
+2. **Concrete Products**: `ConcreteProductA` and `ConcreteProductB` are implementations of the `Product` interface. They represent the actual objects that the factory method will create.
+
+3. **Creator Class**: The `Creator` abstract class declares the factory method `createProduct()`, which subclasses must implement. It also includes a method `someOperation()` that uses the created product.
+
+4. **Concrete Creators**: `ConcreteCreatorA` and `ConcreteCreatorB` implement the factory method to create specific product instances. Each concrete creator is responsible for creating one specific type of product.
+
+### Example Usage
+
+Here's how you can use the Factory Method pattern:
+
+```java
+public class FactoryMethodDemo {
+    public static void main(String[] args) {
+        Creator creatorA = new ConcreteCreatorA();
+        Creator creatorB = new ConcreteCreatorB();
+
+        // Create and use products
+        creatorA.someOperation(); // Output: Using Concrete Product A
+        creatorB.someOperation(); // Output: Using Concrete Product B
+    }
+}
+```
+
+### Considerations
+
+- **Flexibility**: The Factory Method pattern allows adding new products without changing existing code, making it easy to extend.
+
+- **Single Responsibility Principle**: This pattern separates the responsibility of object creation into different classes.
+
+- **Interface-Based Programming**: Clients depend on interfaces rather than concrete classes, promoting loose coupling.
+
+- **Complexity**: While adding flexibility, the Factory Method pattern can introduce additional complexity, especially if there are many product variations.
+
+The Factory Method pattern is an excellent choice when you need flexibility in the creation of objects and want to decouple the instantiation process from the use of those objects. It is widely used in frameworks and libraries to allow users to customize the creation of components.
