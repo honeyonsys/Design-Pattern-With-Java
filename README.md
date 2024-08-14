@@ -1105,3 +1105,153 @@ The Composite pattern is ideal for scenarios where you need to work with tree-li
 
 ----------------------------------------------------------------------------------
 
+## Decorator Design Pattern
+
+The Decorator design pattern is a structural pattern that allows you to add new behaviors to objects dynamically without altering their structure. It provides a flexible alternative to subclassing for extending functionality, making it possible to enhance or modify an object’s behavior at runtime by wrapping it with one or more decorator objects.
+
+### When to Use the Decorator Pattern
+
+1. **Adding Functionality Dynamically**: When you need to add responsibilities to individual objects without affecting other objects of the same class.
+   
+2. **Combining Behaviors**: When you want to combine multiple behaviors or responsibilities in an object dynamically, rather than statically through inheritance.
+
+3. **Avoiding Subclass Explosion**: When extending functionality through inheritance would result in an impractical number of subclasses.
+
+4. **Open/Closed Principle**: When you want to adhere to the open/closed principle, allowing classes to be open for extension but closed for modification.
+
+### Decorator Pattern Implementation in Java
+
+Here’s how to implement the Decorator pattern in Java:
+
+```java
+// Step 1: Define the Component interface
+interface Coffee {
+    String getDescription();
+    double getCost();
+}
+
+// Step 2: Create Concrete Components
+class SimpleCoffee implements Coffee {
+    @Override
+    public String getDescription() {
+        return "Simple Coffee";
+    }
+
+    @Override
+    public double getCost() {
+        return 5.0;
+    }
+}
+
+// Step 3: Create the Decorator class that implements the Component interface
+abstract class CoffeeDecorator implements Coffee {
+    protected Coffee decoratedCoffee;
+
+    public CoffeeDecorator(Coffee coffee) {
+        this.decoratedCoffee = coffee;
+    }
+
+    @Override
+    public String getDescription() {
+        return decoratedCoffee.getDescription();
+    }
+
+    @Override
+    public double getCost() {
+        return decoratedCoffee.getCost();
+    }
+}
+
+// Step 4: Create Concrete Decorators
+class MilkDecorator extends CoffeeDecorator {
+    public MilkDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public String getDescription() {
+        return decoratedCoffee.getDescription() + ", Milk";
+    }
+
+    @Override
+    public double getCost() {
+        return decoratedCoffee.getCost() + 1.5;
+    }
+}
+
+class SugarDecorator extends CoffeeDecorator {
+    public SugarDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public String getDescription() {
+        return decoratedCoffee.getDescription() + ", Sugar";
+    }
+
+    @Override
+    public double getCost() {
+        return decoratedCoffee.getCost() + 0.5;
+    }
+}
+```
+
+### Explanation
+
+1. **Component Interface**: `Coffee` is the component interface that defines the basic operations, such as `getDescription()` and `getCost()`.
+
+2. **Concrete Component**: `SimpleCoffee` is a concrete class that implements the `Coffee` interface. It represents the basic version of the object that can be decorated.
+
+3. **Decorator Class**: `CoffeeDecorator` is an abstract class that implements the `Coffee` interface. It holds a reference to a `Coffee` object and delegates the methods to the wrapped object. This class serves as the base for concrete decorators.
+
+4. **Concrete Decorators**: `MilkDecorator` and `SugarDecorator` are concrete decorators that extend `CoffeeDecorator`. They add their own behavior by enhancing the methods from the `Coffee` interface. For example, `MilkDecorator` adds the description and cost of milk to the base coffee.
+
+### Example Usage
+
+Here’s how you can use the Decorator pattern:
+
+```java
+public class DecoratorPatternDemo {
+    public static void main(String[] args) {
+        Coffee simpleCoffee = new SimpleCoffee();
+        System.out.println(simpleCoffee.getDescription() + " $" + simpleCoffee.getCost());
+
+        Coffee milkCoffee = new MilkDecorator(simpleCoffee);
+        System.out.println(milkCoffee.getDescription() + " $" + milkCoffee.getCost());
+
+        Coffee milkSugarCoffee = new SugarDecorator(milkCoffee);
+        System.out.println(milkSugarCoffee.getDescription() + " $" + milkSugarCoffee.getCost());
+    }
+}
+```
+
+### Explanation
+
+- **Simple Coffee**: Initially, a `SimpleCoffee` object is created, which represents the basic coffee with a description and cost.
+
+- **Adding Milk**: A `MilkDecorator` is created to wrap the `SimpleCoffee` object, effectively adding the description and cost of milk.
+
+- **Adding Sugar**: Finally, a `SugarDecorator` is created to wrap the `MilkDecorator` object, adding the description and cost of sugar.
+
+### Output
+
+```
+Simple Coffee $5.0
+Simple Coffee, Milk $6.5
+Simple Coffee, Milk, Sugar $7.0
+```
+
+### Considerations
+
+- **Flexibility**: The Decorator pattern provides great flexibility in extending an object’s functionality. You can combine decorators in different ways to achieve various effects.
+
+- **Transparency**: Since decorators implement the same interface as the original object, they can be used transparently without the client needing to know that additional behavior has been added.
+
+- **Complexity**: The pattern can introduce complexity due to the large number of small classes that might be created for each decorator.
+
+- **Performance**: Each decorator adds a level of indirection and can lead to increased memory usage or slower performance if overused.
+
+The Decorator pattern is a powerful tool when you need to dynamically add or change the behavior of objects at runtime. It is particularly useful in scenarios where you need to enhance the functionality of objects in a flexible and maintainable way without altering the underlying class structure.
+
+---------------------------------------------------------------------------------
+
