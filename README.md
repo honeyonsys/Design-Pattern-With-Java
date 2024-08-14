@@ -2409,3 +2409,197 @@ To Kill a Mockingbird
 3. **Database Result Sets**: Iterating through rows in a database result set, where each row represents a record in the database.
 
 The **Iterator pattern** is a powerful tool for traversing elements of a collection while maintaining encapsulation and providing a uniform interface for iteration. It's widely used in various programming scenarios where access to collection elements is required without exposing the underlying data structure.
+
+
+----------------------------------------------------------------------------------------
+
+## Mediator Design Pattern
+
+The **Mediator design pattern** is a behavioral design pattern that defines an object that encapsulates how a set of objects interact. This pattern is used to reduce the complexity of communication between multiple objects or classes by centralizing the communication logic in a single mediator object. It promotes loose coupling and easier maintenance by preventing objects from referring to each other explicitly.
+
+### Key Components of the Mediator Pattern
+
+1. **Mediator**: An interface that defines the methods for communicating with different colleagues. It centralizes the communication between different components.
+
+2. **Concrete Mediator**: Implements the `Mediator` interface and coordinates the interactions between the colleague objects. It knows all the colleague objects and handles their communication.
+
+3. **Colleague**: An interface or abstract class for the components that interact with each other through the mediator. It has a reference to the mediator and sends requests through it.
+
+4. **Concrete Colleague**: Implements the `Colleague` interface and communicates with other colleagues through the mediator.
+
+### When to Use the Mediator Pattern
+
+- **Complex Communication**: When you have multiple objects that interact with each other in complex ways, and you want to simplify their communication.
+
+- **Loose Coupling**: When you want to decouple components, allowing them to interact without knowing about each other.
+
+- **Centralized Control**: When you want to centralize control over communication and interaction between different components.
+
+### Example of Mediator Pattern
+
+Let's consider an example where we have a chat room application. The chat room (mediator) handles communication between different users (colleagues). Users send messages to the chat room, which then distributes the messages to other users.
+
+### Java Implementation of Mediator Pattern
+
+#### Step 1: Mediator Interface
+Define the `Mediator` interface with methods for communicating with colleagues.
+
+```java
+// Mediator Interface
+interface ChatMediator {
+    void sendMessage(String message, User user);
+    void addUser(User user);
+}
+```
+
+#### Step 2: Concrete Mediator
+Implement the `ConcreteMediator` which handles communication between users.
+
+```java
+// Concrete Mediator
+class ChatRoom implements ChatMediator {
+    private List<User> users;
+
+    public ChatRoom() {
+        users = new ArrayList<>();
+    }
+
+    @Override
+    public void sendMessage(String message, User user) {
+        for (User u : users) {
+            // Message should not be sent to the user who sent it
+            if (u != user) {
+                u.receive(message);
+            }
+        }
+    }
+
+    @Override
+    public void addUser(User user) {
+        users.add(user);
+    }
+}
+```
+
+#### Step 3: Colleague Interface
+Define the `Colleague` interface with a method to receive messages and a reference to the mediator.
+
+```java
+// Colleague Interface
+abstract class User {
+    protected ChatMediator mediator;
+    protected String name;
+
+    public User(ChatMediator mediator, String name) {
+        this.mediator = mediator;
+        this.name = name;
+    }
+
+    public abstract void send(String message);
+    public abstract void receive(String message);
+}
+```
+
+#### Step 4: Concrete Colleague
+Implement `ConcreteColleague` which uses the mediator to send and receive messages.
+
+```java
+// Concrete Colleague
+class ConcreteUser extends User {
+
+    public ConcreteUser(ChatMediator mediator, String name) {
+        super(mediator, name);
+    }
+
+    @Override
+    public void send(String message) {
+        System.out.println(name + " is sending message: " + message);
+        mediator.sendMessage(message, this);
+    }
+
+    @Override
+    public void receive(String message) {
+        System.out.println(name + " received message: " + message);
+    }
+}
+```
+
+#### Step 5: Client Code
+The client code sets up the chat room and users, and demonstrates communication.
+
+```java
+public class MediatorPatternDemo {
+    public static void main(String[] args) {
+        // Create the mediator
+        ChatMediator chatRoom = new ChatRoom();
+
+        // Create users
+        User john = new ConcreteUser(chatRoom, "John");
+        User jane = new ConcreteUser(chatRoom, "Jane");
+        User mike = new ConcreteUser(chatRoom, "Mike");
+
+        // Add users to the chat room
+        chatRoom.addUser(john);
+        chatRoom.addUser(jane);
+        chatRoom.addUser(mike);
+
+        // Send messages
+        john.send("Hello everyone!");
+        jane.send("Hi John!");
+    }
+}
+```
+
+### Output
+
+```
+John is sending message: Hello everyone!
+John received message: Hello everyone!
+Jane received message: Hello everyone!
+Mike received message: Hello everyone!
+Jane is sending message: Hi John!
+John received message: Hi John!
+Mike received message: Hi John!
+```
+
+### Explanation
+
+- **Mediator Interface (`ChatMediator`)**: Defines methods for sending messages and adding users to the chat room.
+
+- **Concrete Mediator (`ChatRoom`)**: Implements the `ChatMediator` interface. It manages the list of users and handles message distribution between them.
+
+- **Colleague Interface (`User`)**: Declares methods for sending and receiving messages and maintains a reference to the mediator.
+
+- **Concrete Colleague (`ConcreteUser`)**: Implements the `User` interface. It uses the mediator to send and receive messages.
+
+### When to Use the Mediator Pattern
+
+1. **Complex Interactions**: When multiple objects interact in complex ways and you want to simplify and manage these interactions.
+
+2. **Centralized Control**: When you want to centralize control and coordination of interactions between multiple objects, making the system easier to manage.
+
+3. **Decoupling**: When you want to reduce the dependencies between components, making the system more flexible and maintainable.
+
+### Benefits of the Mediator Pattern
+
+1. **Simplified Communication**: Centralizes communication logic, making it easier to manage and understand.
+
+2. **Loose Coupling**: Reduces dependencies between objects, leading to a more modular and maintainable system.
+
+3. **Single Responsibility**: Keeps the responsibility of communication and coordination in one place, adhering to the Single Responsibility Principle.
+
+### Drawbacks of the Mediator Pattern
+
+1. **Complexity**: Can introduce complexity if the mediator becomes too large or handles too many interactions.
+
+2. **Overhead**: Centralizing communication in a mediator may add an overhead in terms of performance and management.
+
+### Real-World Examples of Mediator Pattern
+
+1. **GUI Systems**: In graphical user interfaces (GUIs), a mediator can be used to manage interactions between various UI components (e.g., buttons, text fields).
+
+2. **Chat Applications**: A chat room or messaging system where a mediator manages communication between different users.
+
+3. **Air Traffic Control**: An air traffic control system where the mediator manages communication and coordination between different aircraft.
+
+The **Mediator pattern** is valuable for managing complex interactions between multiple objects by centralizing communication logic and promoting loose coupling. It's particularly useful in scenarios where components need to interact in a controlled manner without being tightly coupled.
