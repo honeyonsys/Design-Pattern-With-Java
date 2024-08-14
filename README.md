@@ -961,4 +961,147 @@ public class BridgePatternDemo {
 
 The Bridge pattern is an effective way to handle situations where you need to manage multiple variations of an abstraction and its implementation. It promotes flexibility, maintainability, and decoupling, making it easier to evolve and manage complex systems.
 
--------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+
+## The Composite Design Pattern
+
+The Composite design pattern is a structural pattern that allows you to compose objects into tree structures to represent part-whole hierarchies. It lets clients treat individual objects and compositions of objects uniformly. In other words, the Composite pattern allows you to group objects into a tree structure and work with these objects as if they were individual objects.
+
+### When to Use Composite
+
+The Composite pattern is useful in the following scenarios:
+
+1. **Hierarchical Structures**: When you need to represent a tree structure, such as a file system, organizational chart, or graphical user interface.
+
+2. **Uniformity**: When you want to treat individual objects and compositions of objects uniformly, allowing clients to interact with both in the same way.
+
+3. **Recursive Structures**: When dealing with recursive structures where a component can be made up of subcomponents of the same type.
+
+4. **Complex Objects**: When you want to build complex objects by combining simpler objects.
+
+### Composite Pattern Implementation in Java
+
+Here's an example of how to implement the Composite pattern in Java:
+
+```java
+// Step 1: Define the Component interface
+interface Employee {
+    void showEmployeeDetails();
+}
+
+// Step 2: Create Leaf classes that implement the Component interface
+class Developer implements Employee {
+    private String name;
+    private long empId;
+    private String position;
+
+    public Developer(long empId, String name, String position) {
+        this.empId = empId;
+        this.name = name;
+        this.position = position;
+    }
+
+    @Override
+    public void showEmployeeDetails() {
+        System.out.println(empId + " " + name + " (" + position + ")");
+    }
+}
+
+class Manager implements Employee {
+    private String name;
+    private long empId;
+    private String position;
+
+    public Manager(long empId, String name, String position) {
+        this.empId = empId;
+        this.name = name;
+        this.position = position;
+    }
+
+    @Override
+    public void showEmployeeDetails() {
+        System.out.println(empId + " " + name + " (" + position + ")");
+    }
+}
+
+// Step 3: Create the Composite class that implements the Component interface
+class CompanyDirectory implements Employee {
+    private List<Employee> employeeList = new ArrayList<>();
+
+    @Override
+    public void showEmployeeDetails() {
+        for (Employee emp : employeeList) {
+            emp.showEmployeeDetails();
+        }
+    }
+
+    public void addEmployee(Employee emp) {
+        employeeList.add(emp);
+    }
+
+    public void removeEmployee(Employee emp) {
+        employeeList.remove(emp);
+    }
+}
+```
+
+### Explanation
+
+1. **Component Interface**: `Employee` is the component interface that defines the operations that can be performed on both leaf nodes and composites. In this case, it has the method `showEmployeeDetails()`.
+
+2. **Leaf Classes**: `Developer` and `Manager` are leaf classes that implement the `Employee` interface. These classes represent individual objects in the composition and provide their own implementation of `showEmployeeDetails()`.
+
+3. **Composite Class**: `CompanyDirectory` is the composite class that implements the `Employee` interface. It contains a list of `Employee` objects (which can be either leaf nodes or other composites) and implements `showEmployeeDetails()` by iterating over this list. It also provides methods to add and remove employees from the directory.
+
+### Example Usage
+
+Here's how you can use the Composite pattern:
+
+```java
+public class CompositePatternDemo {
+    public static void main(String[] args) {
+        Employee dev1 = new Developer(100, "John Doe", "Pro Developer");
+        Employee dev2 = new Developer(101, "Jane Doe", "Developer");
+
+        Employee manager1 = new Manager(200, "Mike Smith", "Manager");
+
+        CompanyDirectory engineeringDirectory = new CompanyDirectory();
+        engineeringDirectory.addEmployee(dev1);
+        engineeringDirectory.addEmployee(dev2);
+
+        CompanyDirectory managerDirectory = new CompanyDirectory();
+        managerDirectory.addEmployee(manager1);
+
+        CompanyDirectory companyDirectory = new CompanyDirectory();
+        companyDirectory.addEmployee(engineeringDirectory);
+        companyDirectory.addEmployee(managerDirectory);
+
+        companyDirectory.showEmployeeDetails();
+    }
+}
+```
+
+### Explanation
+
+- **Creating Objects**: In this example, individual `Developer` and `Manager` objects are created, representing the leaf nodes.
+
+- **Creating Composites**: `CompanyDirectory` objects are created to represent groups of employees. The engineering directory contains developers, and the manager directory contains managers.
+
+- **Composite of Composites**: The main `companyDirectory` is a composite that contains both the engineering and manager directories, effectively creating a tree structure.
+
+- **Uniform Operation**: When you call `showEmployeeDetails()` on `companyDirectory`, it recursively traverses the entire tree and displays the details of all employees, whether they are individual objects or groups of objects.
+
+### Considerations
+
+- **Simplicity**: The Composite pattern simplifies client code by allowing uniform treatment of individual objects and compositions of objects.
+
+- **Flexibility**: It provides flexibility in representing complex structures as simple trees, making it easier to add new components or composites.
+
+- **Overhead**: The pattern may introduce overhead if the structure is not truly hierarchical or if the uniform treatment of objects is not necessary.
+
+- **Complexity**: The pattern can lead to overly generalized code if not used carefully, especially in systems with deep hierarchies.
+
+The Composite pattern is ideal for scenarios where you need to work with tree-like structures and want to treat individual objects and compositions uniformly. It simplifies the management of complex structures and is widely used in file systems, GUI frameworks, and other applications involving hierarchical data.
+
+----------------------------------------------------------------------------------
+
