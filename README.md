@@ -3120,3 +3120,182 @@ Green Light: Go!
 3. **User Interfaces**: UI components that behave differently based on their state (e.g., a button that changes appearance based on whether it’s enabled or disabled).
 
 The **State pattern** is a powerful tool for managing state-dependent behavior in an organized and maintainable manner, providing a structured approach to handle complex state transitions and behavior changes.
+
+
+----------------------------------------------------------------------------------------
+
+## Strategy Design Pattern
+
+The **Strategy design pattern** is a behavioral pattern that defines a family of algorithms, encapsulates each algorithm, and makes them interchangeable. This allows the algorithm to vary independently from clients that use it. The Strategy pattern is used to enable selecting an algorithm's implementation at runtime, making it easier to switch between different strategies without altering the client code.
+
+### Key Components of the Strategy Pattern
+
+1. **Strategy**: An interface or abstract class that defines a common interface for all supported algorithms. Each concrete strategy implements this interface.
+
+2. **Concrete Strategies**: Classes that implement the `Strategy` interface, providing specific implementations of the algorithm.
+
+3. **Context**: The class that uses a `Strategy` object to perform some operation. The context may have a method to set or change the strategy dynamically.
+
+### When to Use the Strategy Pattern
+
+- **Algorithm Variability**: When you have multiple algorithms for a specific task, and you want to be able to switch between them dynamically.
+
+- **Open/Closed Principle**: When you want to extend functionality with new algorithms without modifying existing code.
+
+- **Encapsulation of Algorithms**: When you need to encapsulate different algorithms in separate classes, making it easier to manage and understand.
+
+### Example of Strategy Pattern
+
+Let’s consider an example of a **payment system** where different payment methods (credit card, PayPal, bank transfer) are implemented as different strategies. The payment method can be selected and applied at runtime.
+
+### Java Implementation of Strategy Pattern
+
+#### Step 1: Strategy Interface
+Define the `PaymentStrategy` interface with a method for processing payments.
+
+```java
+// Strategy Interface
+interface PaymentStrategy {
+    void pay(int amount);
+}
+```
+
+#### Step 2: Concrete Strategies
+Implement concrete strategy classes for different payment methods.
+
+```java
+// Concrete Strategy: Credit Card Payment
+class CreditCardPayment implements PaymentStrategy {
+    private String cardNumber;
+
+    public CreditCardPayment(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    @Override
+    public void pay(int amount) {
+        System.out.println("Paid " + amount + " using Credit Card: " + cardNumber);
+    }
+}
+
+// Concrete Strategy: PayPal Payment
+class PayPalPayment implements PaymentStrategy {
+    private String email;
+
+    public PayPalPayment(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public void pay(int amount) {
+        System.out.println("Paid " + amount + " using PayPal: " + email);
+    }
+}
+
+// Concrete Strategy: Bank Transfer Payment
+class BankTransferPayment implements PaymentStrategy {
+    private String accountNumber;
+
+    public BankTransferPayment(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    @Override
+    public void pay(int amount) {
+        System.out.println("Paid " + amount + " using Bank Transfer: " + accountNumber);
+    }
+}
+```
+
+#### Step 3: Context Class
+Define the `ShoppingCart` class that uses a `PaymentStrategy` to process payments.
+
+```java
+// Context Class
+class ShoppingCart {
+    private PaymentStrategy paymentStrategy;
+
+    public void setPaymentStrategy(PaymentStrategy paymentStrategy) {
+        this.paymentStrategy = paymentStrategy;
+    }
+
+    public void checkout(int amount) {
+        if (paymentStrategy == null) {
+            System.out.println("No payment method selected.");
+        } else {
+            paymentStrategy.pay(amount);
+        }
+    }
+}
+```
+
+#### Step 4: Client Code
+Demonstrate how to use the Strategy pattern with the `ShoppingCart` and payment strategy classes.
+
+```java
+public class StrategyPatternDemo {
+    public static void main(String[] args) {
+        ShoppingCart cart = new ShoppingCart();
+
+        // Pay using Credit Card
+        cart.setPaymentStrategy(new CreditCardPayment("1234-5678-9876-5432"));
+        cart.checkout(100);
+
+        // Pay using PayPal
+        cart.setPaymentStrategy(new PayPalPayment("user@example.com"));
+        cart.checkout(200);
+
+        // Pay using Bank Transfer
+        cart.setPaymentStrategy(new BankTransferPayment("9876543210"));
+        cart.checkout(300);
+    }
+}
+```
+
+### Output
+
+```
+Paid 100 using Credit Card: 1234-5678-9876-5432
+Paid 200 using PayPal: user@example.com
+Paid 300 using Bank Transfer: 9876543210
+```
+
+### Explanation
+
+- **Strategy Interface**: Defines a common interface (`pay` method) for all payment strategies.
+
+- **Concrete Strategies**: Implement the `PaymentStrategy` interface with specific payment methods (Credit Card, PayPal, Bank Transfer).
+
+- **Context Class (`ShoppingCart`)**: Uses a `PaymentStrategy` to process payments. The strategy can be set or changed dynamically.
+
+### When to Use the Strategy Pattern
+
+1. **Multiple Algorithms**: When you have multiple algorithms or strategies for a specific task, and you want to switch between them at runtime.
+
+2. **Avoiding Conditional Statements**: When you want to avoid complex conditional statements in your code that choose different algorithms.
+
+3. **Open/Closed Principle**: When you want to add new strategies without modifying existing code.
+
+### Benefits of the Strategy Pattern
+
+1. **Flexibility**: Allows dynamic switching between different algorithms or strategies at runtime.
+
+2. **Encapsulation**: Encapsulates algorithms in separate classes, making the code easier to understand and maintain.
+
+3. **Adherence to Open/Closed Principle**: Supports the addition of new strategies without changing existing code.
+
+### Drawbacks of the Strategy Pattern
+
+1. **Increased Number of Classes**: Can lead to a proliferation of classes, especially if there are many strategies.
+
+2. **Complexity**: May add complexity to the design if not used judiciously.
+
+### Real-World Examples of Strategy Pattern
+
+1. **Sorting Algorithms**: Different sorting algorithms (e.g., quicksort, mergesort) that can be selected based on the data being sorted.
+
+2. **Compression Algorithms**: Different compression algorithms (e.g., ZIP, GZIP) used for data compression.
+
+3. **Route Calculation**: Different route-finding algorithms in GPS systems (e.g., shortest path, fastest route) that can be selected based on user preferences.
+
+The **Strategy pattern** is a versatile and powerful tool for managing different algorithms or behaviors in a flexible and maintainable way, allowing you to easily switch between different strategies and extend functionality without altering existing code.
