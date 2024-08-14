@@ -2777,3 +2777,187 @@ The **Memento pattern** is a powerful tool for managing object states and implem
 
 -----------------------------------------------------------------------------------
 
+## Observer Design Pattern
+
+The **Observer design pattern** is a behavioral pattern that defines a one-to-many dependency between objects. This allows one object (the **subject**) to notify multiple dependent objects (the **observers**) of any state changes, usually by calling one of their methods. This pattern is useful for implementing distributed event-handling systems and is commonly used in scenarios where changes in one part of a system need to be automatically propagated to other parts.
+
+### Key Components of the Observer Pattern
+
+1. **Subject**: The object that maintains a list of observers and provides methods to attach, detach, and notify observers. It is responsible for updating all registered observers when its state changes.
+
+2. **Observer**: An interface or abstract class defining the update method that gets called by the `Subject` when its state changes. Observers are notified of changes in the `Subject`.
+
+3. **Concrete Subject**: A specific implementation of the `Subject` that holds the state and notifies observers of state changes.
+
+4. **Concrete Observer**: A specific implementation of the `Observer` that updates itself based on notifications from the `Concrete Subject`.
+
+### When to Use the Observer Pattern
+
+- **Event Handling**: When you need to implement a system where changes to one object should be reflected in other objects automatically.
+
+- **Decoupling**: When you want to decouple the sender of a notification from the receivers.
+
+- **Distributed Systems**: When you have a system where multiple components need to react to changes in another component.
+
+### Example of Observer Pattern
+
+Let's consider an example where we have a weather station (subject) that notifies multiple display elements (observers) about changes in weather data.
+
+### Java Implementation of Observer Pattern
+
+#### Step 1: Observer Interface
+Define the `Observer` interface with a method to update the observer.
+
+```java
+// Observer Interface
+interface Observer {
+    void update(float temperature, float humidity, float pressure);
+}
+```
+
+#### Step 2: Subject Interface
+Define the `Subject` interface with methods for attaching, detaching, and notifying observers.
+
+```java
+// Subject Interface
+interface Subject {
+    void registerObserver(Observer observer);
+    void removeObserver(Observer observer);
+    void notifyObservers();
+}
+```
+
+#### Step 3: Concrete Subject
+Implement the `ConcreteSubject` class that maintains a list of observers and notifies them of changes.
+
+```java
+// Concrete Subject
+class WeatherData implements Subject {
+    private List<Observer> observers;
+    private float temperature;
+    private float humidity;
+    private float pressure;
+
+    public WeatherData() {
+        observers = new ArrayList<>();
+    }
+
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(temperature, humidity, pressure);
+        }
+    }
+
+    // Set new weather data and notify observers
+    public void setMeasurements(float temperature, float humidity, float pressure) {
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        notifyObservers();
+    }
+}
+```
+
+#### Step 4: Concrete Observer
+Implement the `ConcreteObserver` class that reacts to changes in the subject.
+
+```java
+// Concrete Observer
+class CurrentConditionsDisplay implements Observer {
+    private float temperature;
+    private float humidity;
+
+    @Override
+    public void update(float temperature, float humidity, float pressure) {
+        this.temperature = temperature;
+        this.humidity = humidity;
+        display();
+    }
+
+    public void display() {
+        System.out.println("Current conditions: " + temperature + "F degrees and " + humidity + "% humidity");
+    }
+}
+```
+
+#### Step 5: Client Code
+Demonstrate how to use the `Observer` pattern with the `WeatherData` and `CurrentConditionsDisplay` classes.
+
+```java
+public class ObserverPatternDemo {
+    public static void main(String[] args) {
+        // Create the subject
+        WeatherData weatherData = new WeatherData();
+
+        // Create observers
+        CurrentConditionsDisplay currentDisplay = new CurrentConditionsDisplay();
+
+        // Register observers
+        weatherData.registerObserver(currentDisplay);
+
+        // Update weather data
+        weatherData.setMeasurements(80, 65, 30.4f);
+        weatherData.setMeasurements(82, 70, 29.2f);
+    }
+}
+```
+
+### Output
+
+```
+Current conditions: 80.0F degrees and 65.0% humidity
+Current conditions: 82.0F degrees and 70.0% humidity
+```
+
+### Explanation
+
+- **Observer Interface**: Defines the `update` method that observers use to receive updates.
+
+- **Subject Interface**: Defines methods for registering, removing, and notifying observers.
+
+- **Concrete Subject (`WeatherData`)**: Maintains the state (weather data) and notifies registered observers when the state changes.
+
+- **Concrete Observer (`CurrentConditionsDisplay`)**: Implements the `Observer` interface and updates its display based on the latest weather data.
+
+### When to Use the Observer Pattern
+
+1. **Event Handling**: When you need to handle events or changes in one part of a system and update multiple other parts of the system.
+
+2. **Decoupling Components**: When you want to decouple components so that the subject does not need to know about the details of its observers.
+
+3. **Multiple Dependent Objects**: When you have multiple objects that need to be updated in response to changes in another object.
+
+### Benefits of the Observer Pattern
+
+1. **Loose Coupling**: Reduces dependencies between the subject and observers, making the system more flexible and easier to maintain.
+
+2. **Dynamic Relationships**: Allows observers to be added or removed dynamically at runtime.
+
+3. **Centralized Notification**: Provides a centralized mechanism for notifying multiple observers of changes.
+
+### Drawbacks of the Observer Pattern
+
+1. **Performance Issues**: If there are many observers, the performance of the notification system may be affected.
+
+2. **Complexity**: The pattern can add complexity to the design, especially if there are many interdependent observers.
+
+### Real-World Examples of Observer Pattern
+
+1. **User Interface Events**: GUI frameworks where UI components (like buttons, sliders) notify listeners (observers) about user actions.
+
+2. **Messaging Systems**: Notification systems where subscribers (observers) receive messages or updates from a publisher (subject).
+
+3. **Stock Market Applications**: Applications where various displays or components update in response to stock price changes.
+
+The **Observer pattern** is a powerful tool for implementing distributed event-handling systems, managing updates in a decoupled manner, and maintaining flexibility in your application's design.
