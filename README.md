@@ -405,3 +405,161 @@ class Application {
 Overall, the Abstract Factory pattern is a powerful tool for managing complex systems where multiple families of related objects need to be created and used consistently, promoting flexibility and scalability.
 
 ------------------------------------------------------------------------------------------
+
+## Builder Design Pattern
+
+The Builder design pattern is a creational pattern used to construct complex objects step by step. It separates the construction of a complex object from its representation, allowing the same construction process to create different representations. The Builder pattern is particularly useful when an object requires numerous parameters or when complex initialization is needed.
+
+### When to Use Builder
+
+The Builder pattern is ideal in the following situations:
+
+1. **Complex Object Construction**: When you have a complex object with many fields, especially when many of them are optional.
+
+2. **Immutability**: When you want to create immutable objects, as it allows setting all properties at once before finalizing the object.
+
+3. **Readable Code**: When you want to improve code readability and reduce the chance of errors by using a clear and fluent interface for object construction.
+
+4. **Object Variations**: When the object can have different representations or configurations, and you want to separate the construction logic from the representation.
+
+### Builder Pattern Implementation in Java
+
+Here's an example of how to implement the Builder pattern in Java:
+
+```java
+// Step 1: Define the complex object
+public class Car {
+    // Required parameters
+    private final String engine;
+    private final String transmission;
+
+    // Optional parameters
+    private final boolean airConditioning;
+    private final boolean gps;
+    private final boolean sunroof;
+
+    // Private constructor
+    private Car(CarBuilder builder) {
+        this.engine = builder.engine;
+        this.transmission = builder.transmission;
+        this.airConditioning = builder.airConditioning;
+        this.gps = builder.gps;
+        this.sunroof = builder.sunroof;
+    }
+
+    // Getters
+    public String getEngine() {
+        return engine;
+    }
+
+    public String getTransmission() {
+        return transmission;
+    }
+
+    public boolean hasAirConditioning() {
+        return airConditioning;
+    }
+
+    public boolean hasGps() {
+        return gps;
+    }
+
+    public boolean hasSunroof() {
+        return sunroof;
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "engine='" + engine + '\'' +
+                ", transmission='" + transmission + '\'' +
+                ", airConditioning=" + airConditioning +
+                ", gps=" + gps +
+                ", sunroof=" + sunroof +
+                '}';
+    }
+
+    // Step 2: Create a static nested Builder class
+    public static class CarBuilder {
+        private final String engine;
+        private final String transmission;
+        private boolean airConditioning;
+        private boolean gps;
+        private boolean sunroof;
+
+        // Constructor with required parameters
+        public CarBuilder(String engine, String transmission) {
+            this.engine = engine;
+            this.transmission = transmission;
+        }
+
+        // Methods to set optional parameters
+        public CarBuilder setAirConditioning(boolean airConditioning) {
+            this.airConditioning = airConditioning;
+            return this;
+        }
+
+        public CarBuilder setGps(boolean gps) {
+            this.gps = gps;
+            return this;
+        }
+
+        public CarBuilder setSunroof(boolean sunroof) {
+            this.sunroof = sunroof;
+            return this;
+        }
+
+        // Method to build the final product
+        public Car build() {
+            return new Car(this);
+        }
+    }
+}
+```
+
+### Explanation
+
+1. **Complex Object**: The `Car` class is the complex object being constructed. It has both required (`engine`, `transmission`) and optional (`airConditioning`, `gps`, `sunroof`) parameters.
+
+2. **Private Constructor**: The constructor for `Car` is private and accepts a `CarBuilder` object, which contains all the necessary parameters to construct a `Car` instance.
+
+3. **Nested Builder Class**: The `CarBuilder` class is a static nested class that constructs the `Car` object. It has methods for setting optional parameters and a `build()` method to create the `Car` instance.
+
+4. **Fluent Interface**: The builder methods return `this`, allowing method chaining for a fluent interface.
+
+### Example Usage
+
+Here's how you can use the Builder pattern to construct a `Car` object:
+
+```java
+public class BuilderPatternDemo {
+    public static void main(String[] args) {
+        // Create a Car using the Builder pattern
+        Car car = new Car.CarBuilder("V6", "Automatic")
+                .setAirConditioning(true)
+                .setGps(true)
+                .setSunroof(false)
+                .build();
+
+        System.out.println(car);
+    }
+}
+```
+
+### Explanation
+
+- **Building the Object**: The `CarBuilder` is used to set the required parameters (`engine`, `transmission`) and optional parameters (`airConditioning`, `gps`, `sunroof`).
+
+- **Finalizing the Object**: The `build()` method is called to create the `Car` instance.
+
+### Considerations
+
+- **Immutability**: The Builder pattern is often used to create immutable objects, where all properties are set at the time of object creation.
+
+- **Readability**: The pattern enhances code readability and makes the object construction process more intuitive.
+
+- **Complexity**: It adds complexity by introducing additional classes, but this is often justified by the clarity and flexibility it provides.
+
+The Builder pattern is a powerful tool for constructing complex objects with numerous optional parameters. It improves code maintainability, readability, and ensures that objects are constructed in a controlled manner.
+
+----------------------------------------------------------------------------------
