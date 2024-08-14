@@ -839,3 +839,126 @@ public class AdapterPatternDemo {
 The Adapter pattern is an effective way to enable incompatible interfaces to work together, allowing you to reuse existing code without modification. It is widely used in scenarios where you need to integrate with third-party libraries or legacy systems with different interfaces.
 
 -----------------------------------------------------------------------------------
+
+## The bridge Design Pattern
+
+The Bridge design pattern is a structural pattern that separates an abstraction from its implementation, allowing both to evolve independently. This pattern is used to bridge the gap between an abstraction and its implementation, providing a way to vary both independently without affecting the other.
+
+### When to Use Bridge
+
+The Bridge pattern is useful in the following scenarios:
+
+1. **Multiple Variants**: When you have multiple abstractions that need to be implemented in different ways, and you want to avoid a proliferation of subclasses.
+
+2. **Independent Evolution**: When you want to allow both the abstraction and its implementation to evolve independently.
+
+3. **Complex Hierarchies**: When the combination of different abstractions and implementations creates a complex hierarchy.
+
+4. **Decoupling**: When you want to decouple the abstraction from its implementation so that changes to one do not affect the other.
+
+### Bridge Pattern Implementation in Java
+
+Here's an example of how to implement the Bridge pattern in Java:
+
+```java
+// Step 1: Define the Implementor interface
+interface DrawingAPI {
+    void drawCircle(double x, double y, double radius);
+}
+
+// Step 2: Create concrete Implementors
+class DrawingAPI1 implements DrawingAPI {
+    @Override
+    public void drawCircle(double x, double y, double radius) {
+        System.out.println("Drawing circle using API1 at (" + x + ", " + y + ") with radius " + radius);
+    }
+}
+
+class DrawingAPI2 implements DrawingAPI {
+    @Override
+    public void drawCircle(double x, double y, double radius) {
+        System.out.println("Drawing circle using API2 at (" + x + ", " + y + ") with radius " + radius);
+    }
+}
+
+// Step 3: Define the Abstraction
+abstract class Shape {
+    protected DrawingAPI drawingAPI;
+
+    protected Shape(DrawingAPI drawingAPI) {
+        this.drawingAPI = drawingAPI;
+    }
+
+    public abstract void draw();
+    public abstract void resizeByPercentage(double pct);
+}
+
+// Step 4: Create refined abstractions
+class Circle extends Shape {
+    private double x, y, radius;
+
+    public Circle(double x, double y, double radius, DrawingAPI drawingAPI) {
+        super(drawingAPI);
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+    }
+
+    @Override
+    public void draw() {
+        drawingAPI.drawCircle(x, y, radius);
+    }
+
+    @Override
+    public void resizeByPercentage(double pct) {
+        radius *= (1 + pct / 100);
+    }
+}
+```
+
+### Explanation
+
+1. **Implementor Interface**: `DrawingAPI` is the interface for the implementation classes. It declares the methods that concrete implementations must provide.
+
+2. **Concrete Implementors**: `DrawingAPI1` and `DrawingAPI2` are concrete implementations of the `DrawingAPI` interface, providing different ways to draw circles.
+
+3. **Abstraction**: `Shape` is an abstract class that uses an instance of `DrawingAPI`. It provides an abstract method `draw()` that subclasses must implement.
+
+4. **Refined Abstractions**: `Circle` is a concrete subclass of `Shape` that implements the `draw()` method using the provided `DrawingAPI`. It also provides a method to resize the circle.
+
+### Example Usage
+
+Here's how you can use the Bridge pattern:
+
+```java
+public class BridgePatternDemo {
+    public static void main(String[] args) {
+        Shape circle1 = new Circle(5, 10, 15, new DrawingAPI1());
+        Shape circle2 = new Circle(20, 30, 25, new DrawingAPI2());
+
+        circle1.draw();
+        circle2.draw();
+
+        circle1.resizeByPercentage(10);
+        circle1.draw();
+    }
+}
+```
+
+### Explanation
+
+- **Drawing Different Circles**: The `Circle` objects use different `DrawingAPI` implementations to draw circles. `circle1` uses `DrawingAPI1`, while `circle2` uses `DrawingAPI2`.
+
+- **Independent Evolution**: The `Circle` class can evolve independently from the `DrawingAPI` implementations. Similarly, the `DrawingAPI` implementations can evolve without affecting the `Circle` class.
+
+### Considerations
+
+- **Flexibility**: The Bridge pattern provides flexibility by decoupling the abstraction and implementation. This allows changes to one without affecting the other.
+
+- **Complexity**: Introducing an additional layer of abstraction can add complexity to the codebase, especially if the number of abstractions and implementations increases.
+
+- **Maintainability**: The pattern improves maintainability by separating concerns and adhering to the Single Responsibility Principle.
+
+The Bridge pattern is an effective way to handle situations where you need to manage multiple variations of an abstraction and its implementation. It promotes flexibility, maintainability, and decoupling, making it easier to evolve and manage complex systems.
+
+-------------------------------------------------------------------------------
