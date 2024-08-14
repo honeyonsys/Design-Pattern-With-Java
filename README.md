@@ -2603,3 +2603,177 @@ Mike received message: Hi John!
 3. **Air Traffic Control**: An air traffic control system where the mediator manages communication and coordination between different aircraft.
 
 The **Mediator pattern** is valuable for managing complex interactions between multiple objects by centralizing communication logic and promoting loose coupling. It's particularly useful in scenarios where components need to interact in a controlled manner without being tightly coupled.
+
+
+-----------------------------------------------------------------------------------------
+
+## Memento Design Pattern
+
+The **Memento design pattern** is a behavioral design pattern that allows an object to capture and externalize its internal state without violating encapsulation, so that the object can be restored to that state later. This pattern is useful for implementing undo/redo functionality, saving the state of an object at a given point in time, or for managing checkpoints.
+
+### Key Components of the Memento Pattern
+
+1. **Memento**: An object that stores the internal state of the `Originator`. It typically has no methods to alter its state and is designed to be immutable.
+
+2. **Originator**: The object whose state needs to be saved and restored. It creates a `Memento` object to store its state and can use a `Memento` to restore its state.
+
+3. **Caretaker**: Manages the `Memento` objects. It holds onto the `Memento` and can request the `Originator` to restore its state from a `Memento`, but it does not modify or examine the content of the `Memento`.
+
+### When to Use the Memento Pattern
+
+- **Undo/Redo Functionality**: When you need to provide undo and redo capabilities in your application.
+
+- **State Restoration**: When you want to save and restore the state of an object without exposing its internal structure.
+
+- **Checkpointing**: When you need to take snapshots of an object’s state to revert to at a later time.
+
+### Example of Memento Pattern
+
+Consider a text editor where you want to implement undo functionality. The text editor can create snapshots of its content, which can later be used to revert to a previous state.
+
+### Java Implementation of Memento Pattern
+
+#### Step 1: Memento Class
+Define the `Memento` class that holds the state of the `Originator`.
+
+```java
+// Memento Class
+class Memento {
+    private String content;
+
+    public Memento(String content) {
+        this.content = content;
+    }
+
+    public String getContent() {
+        return content;
+    }
+}
+```
+
+#### Step 2: Originator Class
+Define the `Originator` class that creates and restores `Memento` objects.
+
+```java
+// Originator Class
+class TextEditor {
+    private String content;
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    // Create a Memento with the current state
+    public Memento createMemento() {
+        return new Memento(content);
+    }
+
+    // Restore the state from a Memento
+    public void restoreMemento(Memento memento) {
+        this.content = memento.getContent();
+    }
+}
+```
+
+#### Step 3: Caretaker Class
+Define the `Caretaker` class that manages `Memento` objects.
+
+```java
+// Caretaker Class
+class Caretaker {
+    private List<Memento> mementoList = new ArrayList<>();
+
+    public void addMemento(Memento memento) {
+        mementoList.add(memento);
+    }
+
+    public Memento getMemento(int index) {
+        return mementoList.get(index);
+    }
+}
+```
+
+#### Step 4: Client Code
+Demonstrate how to use the `Memento` pattern with the `TextEditor`, `Caretaker`, and `Memento` classes.
+
+```java
+public class MementoPatternDemo {
+    public static void main(String[] args) {
+        // Create the originator
+        TextEditor textEditor = new TextEditor();
+        Caretaker caretaker = new Caretaker();
+
+        // Set content and create mementos
+        textEditor.setContent("Version 1");
+        caretaker.addMemento(textEditor.createMemento());
+
+        textEditor.setContent("Version 2");
+        caretaker.addMemento(textEditor.createMemento());
+
+        textEditor.setContent("Version 3");
+        System.out.println("Current content: " + textEditor.getContent());
+
+        // Restore to a previous state
+        textEditor.restoreMemento(caretaker.getMemento(1));
+        System.out.println("Restored content: " + textEditor.getContent());
+
+        textEditor.restoreMemento(caretaker.getMemento(0));
+        System.out.println("Restored content: " + textEditor.getContent());
+    }
+}
+```
+
+### Output
+
+```
+Current content: Version 3
+Restored content: Version 2
+Restored content: Version 1
+```
+
+### Explanation
+
+- **Memento Class**: Stores the state of the `TextEditor` (i.e., its content). It provides no methods to alter the state once it is set.
+
+- **Originator Class (`TextEditor`)**: The `TextEditor` can create a `Memento` to save its current state and restore its state from a `Memento`.
+
+- **Caretaker Class**: Manages the list of `Memento` objects. It adds new `Memento` instances and retrieves them as needed but does not manipulate or access their content.
+
+### When to Use the Memento Pattern
+
+1. **Undo/Redo Functionality**: Implementing undo/redo features in applications where reverting to previous states is required.
+
+2. **State Preservation**: When you need to save the state of an object and restore it later without exposing its internal structure.
+
+3. **Checkpoints**: In applications where you need to create checkpoints or snapshots of an object’s state to revert to if necessary.
+
+### Benefits of the Memento Pattern
+
+1. **Encapsulation**: Protects the internal state of the object and only allows state restoration through the `Memento` class.
+
+2. **Separation of Concerns**: Separates the responsibility of managing state (in the `Memento`) from the `Originator` and `Caretaker`.
+
+3. **Flexible State Restoration**: Allows for flexible and efficient state restoration without exposing or modifying the internal structure of the `Originator`.
+
+### Drawbacks of the Memento Pattern
+
+1. **Memory Overhead**: Storing multiple states can lead to increased memory usage, especially if many states are stored.
+
+2. **Complexity**: Can introduce additional complexity in managing and handling `Memento` objects.
+
+### Real-World Examples of Memento Pattern
+
+1. **Text Editors**: Implementing undo/redo functionality where each action or change is saved as a `Memento`.
+
+2. **Version Control Systems**: Saving different versions or states of files, allowing users to revert to previous versions.
+
+3. **Game Save Systems**: Saving the state of a game at various points so that players can return to those points.
+
+The **Memento pattern** is a powerful tool for managing object states and implementing undo/redo functionality, preserving encapsulation while allowing state restoration. It is particularly useful in scenarios where state management is complex and needs to be handled with care.
+
+-----------------------------------------------------------------------------------
+
