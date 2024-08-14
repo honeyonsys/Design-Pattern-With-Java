@@ -1689,3 +1689,192 @@ Imagine a **banking system** where the customer data is sensitive and access to 
 - Log all access to the customer data for audit purposes.
 
 The **Proxy** design pattern is very flexible and can be adapted to a wide range of use cases, such as enhancing performance, securing access, logging operations, and managing resources effectively. It provides a way to add functionality without modifying the existing classes, adhering to the Open/Closed principle.
+
+------------------------------------------------------------------------------------------
+
+## Chain of responsibility
+
+The **Chain of Responsibility** pattern is a behavioral design pattern that allows multiple objects (handlers) to process a request without the sender needing to know which handler will process it. This chain allows multiple handlers to either process the request or pass it along the chain to the next handler.
+
+Each handler in the chain has two choices:
+1. Handle the request and stop further processing.
+2. Pass the request to the next handler in the chain.
+
+This pattern promotes loose coupling between the sender of a request and its receivers by giving multiple objects a chance to handle the request.
+
+### When to Use the Chain of Responsibility Pattern
+
+- **Multiple Handlers**: When you want several objects to have a chance to handle a request, but you don’t know which object will handle it in advance.
+  
+- **Dynamic Request Handling**: When you want to dynamically set the sequence of handlers at runtime.
+
+- **Command Execution**: When a request should be passed along a chain of handlers and the first handler that can process it does so.
+
+- **Decoupling of Sender and Receiver**: When you want to decouple the sender of a request from the receiver, allowing for more flexible and extensible systems.
+
+### Example Scenario
+
+Imagine a **tech support system** where different levels of support (e.g., junior support, senior support, technical lead) exist. If a junior support engineer can’t solve a problem, they pass it up the chain to senior support, and if the senior engineer can’t resolve it, they pass it to the technical lead.
+
+### Components of Chain of Responsibility
+
+1. **Handler (Abstract class or Interface)**: Declares an interface for handling requests. Optionally, it defines a method to set the next handler in the chain.
+
+2. **Concrete Handlers**: Implement the handler's interface and process requests they are capable of handling. If they can’t handle the request, they pass it to the next handler in the chain.
+
+3. **Client**: Sends the request to the handler. The client is unaware of which handler will process the request.
+
+### Chain of Responsibility Pattern Implementation in Java
+
+Let's implement a **support system** where a customer query is passed through various levels of support staff.
+
+#### Step 1: Handler Interface
+The `SupportHandler` interface defines a method for handling requests and setting the next handler in the chain.
+
+```java
+// Handler Interface
+abstract class SupportHandler {
+    protected SupportHandler nextHandler;
+
+    // Method to set the next handler in the chain
+    public void setNextHandler(SupportHandler nextHandler) {
+        this.nextHandler = nextHandler;
+    }
+
+    // Method to process the request
+    public abstract void handleRequest(String issue);
+}
+```
+
+#### Step 2: Concrete Handlers
+Each concrete handler tries to process the request or passes it to the next handler in the chain.
+
+```java
+// Junior Support Handler
+class JuniorSupport extends SupportHandler {
+    @Override
+    public void handleRequest(String issue) {
+        if (issue.equals("Basic")) {
+            System.out.println("Junior Support: Handling basic issue.");
+        } else {
+            System.out.println("Junior Support: Can't handle, passing to Senior Support.");
+            if (nextHandler != null) {
+                nextHandler.handleRequest(issue);
+            }
+        }
+    }
+}
+
+// Senior Support Handler
+class SeniorSupport extends SupportHandler {
+    @Override
+    public void handleRequest(String issue) {
+        if (issue.equals("Intermediate")) {
+            System.out.println("Senior Support: Handling intermediate issue.");
+        } else {
+            System.out.println("Senior Support: Can't handle, passing to Technical Lead.");
+            if (nextHandler != null) {
+                nextHandler.handleRequest(issue);
+            }
+        }
+    }
+}
+
+// Technical Lead Handler
+class TechnicalLead extends SupportHandler {
+    @Override
+    public void handleRequest(String issue) {
+        if (issue.equals("Advanced")) {
+            System.out.println("Technical Lead: Handling advanced issue.");
+        } else {
+            System.out.println("Technical Lead: Issue not supported.");
+        }
+    }
+}
+```
+
+#### Step 3: Client Code
+The client sets up the chain of responsibility and sends a request.
+
+```java
+public class ChainOfResponsibilityDemo {
+    public static void main(String[] args) {
+        // Create handlers
+        SupportHandler juniorSupport = new JuniorSupport();
+        SupportHandler seniorSupport = new SeniorSupport();
+        SupportHandler techLead = new TechnicalLead();
+
+        // Build the chain of responsibility
+        juniorSupport.setNextHandler(seniorSupport);
+        seniorSupport.setNextHandler(techLead);
+
+        // Make requests
+        System.out.println("Sending 'Basic' issue:");
+        juniorSupport.handleRequest("Basic");
+
+        System.out.println("\nSending 'Intermediate' issue:");
+        juniorSupport.handleRequest("Intermediate");
+
+        System.out.println("\nSending 'Advanced' issue:");
+        juniorSupport.handleRequest("Advanced");
+
+        System.out.println("\nSending 'Unknown' issue:");
+        juniorSupport.handleRequest("Unknown");
+    }
+}
+```
+
+### Output
+
+```
+Sending 'Basic' issue:
+Junior Support: Handling basic issue.
+
+Sending 'Intermediate' issue:
+Junior Support: Can't handle, passing to Senior Support.
+Senior Support: Handling intermediate issue.
+
+Sending 'Advanced' issue:
+Junior Support: Can't handle, passing to Senior Support.
+Senior Support: Can't handle, passing to Technical Lead.
+Technical Lead: Handling advanced issue.
+
+Sending 'Unknown' issue:
+Junior Support: Can't handle, passing to Senior Support.
+Senior Support: Can't handle, passing to Technical Lead.
+Technical Lead: Issue not supported.
+```
+
+### Explanation
+
+- **Handler Interface (`SupportHandler`)**: Defines an interface for handling requests and passing the request to the next handler in the chain.
+
+- **Concrete Handlers (`JuniorSupport`, `SeniorSupport`, `TechnicalLead`)**: Each handler checks whether it can process the request. If it can’t, it passes the request to the next handler.
+
+- **Client**: The client code sets up the chain and sends requests. It doesn’t know or care which handler processes the request.
+
+### Benefits of Chain of Responsibility Pattern
+
+1. **Decoupling of Sender and Receiver**: The sender of the request is decoupled from the object that handles the request. Multiple handlers have a chance to process the request, promoting flexibility.
+
+2. **Simplifies Object Relationships**: The pattern eliminates direct dependencies between sender and receiver, making it easier to maintain the code.
+
+3. **Flexible Chain Structure**: The chain can be modified at runtime by dynamically changing the order of the handlers or adding/removing handlers.
+
+4. **Single Responsibility**: Each handler has a single responsibility — either process the request or pass it on.
+
+### Real-World Examples of Chain of Responsibility
+
+- **Logging Systems**: Loggers often implement the Chain of Responsibility pattern, where different log levels (e.g., DEBUG, INFO, ERROR) pass the log message up the chain until the appropriate level is reached.
+
+- **Event Handling in GUI Frameworks**: In many GUI frameworks, events are passed through a chain of handlers, such as mouse or keyboard events, where each handler has the chance to process or pass the event.
+
+- **Middleware in Web Frameworks**: In web frameworks like **Express.js** or **ASP.NET Core**, middleware components form a chain, where each middleware can handle the request or pass it to the next middleware.
+
+### Considerations
+
+- **Performance Overhead**: If the chain of responsibility is long, there may be performance overhead as the request is passed through many handlers.
+
+- **Uncertain Handling**: There is no guarantee that the request will be handled, as it depends on the chain's structure. You may need a fallback mechanism for unhandled requests.
+
+The **Chain of Responsibility** pattern is ideal when there are multiple potential handlers for a request, but only one should handle it. It provides flexibility, decoupling, and a clean approach to handling requests in a system where many handlers might be involved.
