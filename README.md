@@ -1383,3 +1383,147 @@ The **Facade** pattern is an excellent choice when you need to simplify complex 
 
 ----------------------------------------------------------------------------------
 
+## Flyweight Design Pattern
+
+The **Flyweight** design pattern is a structural pattern used to minimize memory usage and improve performance by sharing as much data as possible between similar objects. It is especially useful when you need to create a large number of objects that share some common data.
+
+Instead of creating multiple objects for the same data, the Flyweight pattern allows you to share objects, reducing the overall memory footprint. This is achieved by separating the object’s state into **intrinsic** (shared) and **extrinsic** (unique) states.
+
+### When to Use the Flyweight Pattern
+
+1. **Large Number of Objects**: When your system needs to handle a large number of objects that would consume a significant amount of memory if instantiated individually.
+
+2. **Shared State**: When many objects share common data or state that can be extracted and shared to reduce memory consumption.
+
+3. **Performance Concerns**: When memory usage or performance is a concern due to the large number of objects created at runtime.
+
+4. **Immutable Objects**: When the objects being shared are immutable (i.e., their state does not change after creation), Flyweight can be very effective.
+
+### Flyweight Pattern Implementation in Java
+
+Here’s an example of the Flyweight pattern using a text editor scenario, where characters are shared to reduce memory usage:
+
+#### Step 1: Flyweight Interface
+This interface represents the flyweight objects that will be shared.
+
+```java
+// Flyweight Interface
+interface CharacterFlyweight {
+    void display(int fontSize);
+}
+```
+
+#### Step 2: Concrete Flyweight Class
+This class implements the flyweight interface. Instances of this class represent the shared part (intrinsic state) of the object, such as the character itself.
+
+```java
+// Concrete Flyweight
+class Character implements CharacterFlyweight {
+    private final char symbol; // Intrinsic state (shared)
+    
+    public Character(char symbol) {
+        this.symbol = symbol;
+    }
+
+    @Override
+    public void display(int fontSize) {
+        System.out.println("Displaying character '" + symbol + "' with font size " + fontSize);
+    }
+}
+```
+
+#### Step 3: Flyweight Factory
+This class ensures that flyweight objects are reused and shared. It returns either a new or an existing flyweight object based on the character symbol.
+
+```java
+// Flyweight Factory
+import java.util.HashMap;
+import java.util.Map;
+
+class CharacterFactory {
+    private Map<Character, CharacterFlyweight> flyweightMap = new HashMap<>();
+
+    public CharacterFlyweight getCharacter(char symbol) {
+        CharacterFlyweight flyweight = flyweightMap.get(symbol);
+        if (flyweight == null) {
+            flyweight = new Character(symbol);
+            flyweightMap.put(symbol, flyweight);
+        }
+        return flyweight;
+    }
+}
+```
+
+#### Step 4: Client Code
+The client code uses the `CharacterFactory` to get flyweight objects and interact with them.
+
+```java
+public class FlyweightPatternDemo {
+    public static void main(String[] args) {
+        CharacterFactory factory = new CharacterFactory();
+
+        // Use shared flyweight objects for characters
+        CharacterFlyweight c1 = factory.getCharacter('A');
+        CharacterFlyweight c2 = factory.getCharacter('B');
+        CharacterFlyweight c3 = factory.getCharacter('A');  // Reuse flyweight for 'A'
+
+        // Display characters with different extrinsic state (font size)
+        c1.display(12);
+        c2.display(14);
+        c3.display(16);
+    }
+}
+```
+
+### Explanation
+
+- **Flyweight Interface (`CharacterFlyweight`)**: This interface defines the method `display()` that will be used to render the character with a specific font size.
+  
+- **Concrete Flyweight (`Character`)**: This class implements the `CharacterFlyweight` interface and stores the intrinsic state (the actual character symbol) that will be shared across instances.
+
+- **Flyweight Factory (`CharacterFactory`)**: This factory class manages flyweight objects. It ensures that only one instance of each unique character is created and reused whenever needed.
+
+- **Client Code**: The client interacts with the `CharacterFactory` to retrieve characters and display them with different font sizes. Even though the character 'A' is displayed multiple times, it is only created once, thanks to the Flyweight pattern.
+
+### Output
+
+```
+Displaying character 'A' with font size 12
+Displaying character 'B' with font size 14
+Displaying character 'A' with font size 16
+```
+
+### Key Concepts in the Flyweight Pattern
+
+1. **Intrinsic State**: This is the state that is shared between objects. It is immutable and can be reused by multiple objects. In the example, the character symbol (e.g., 'A', 'B') is intrinsic.
+
+2. **Extrinsic State**: This is the state that is unique to each object and must be passed in at runtime. In the example, the font size is extrinsic and passed to the `display()` method.
+
+3. **Flyweight Factory**: This factory ensures that flyweight objects are shared and reused. It keeps a pool of already-created flyweights and returns existing ones when possible, instead of creating new instances.
+
+### Benefits of the Flyweight Pattern
+
+1. **Reduced Memory Usage**: By sharing objects instead of creating multiple instances, the Flyweight pattern reduces memory consumption significantly.
+
+2. **Increased Performance**: Reducing the number of objects created can improve the performance of the application, especially in memory-constrained environments.
+
+3. **Separation of Concerns**: By separating intrinsic (shared) and extrinsic (unique) states, the pattern helps manage data more effectively.
+
+### Considerations
+
+- **Complexity**: The Flyweight pattern introduces complexity because you need to distinguish between intrinsic and extrinsic states. The client needs to manage the extrinsic state, which can increase complexity.
+
+- **Performance Overhead**: Although the pattern saves memory, it can introduce performance overhead due to object management and the need to look up shared instances.
+
+- **Use with Immutable Objects**: The Flyweight pattern is more suitable for immutable objects where the intrinsic state does not change after creation.
+
+### Real-World Example
+
+A real-world example of the Flyweight pattern can be seen in **GUI frameworks** (like Java's Swing). In such systems, graphical elements like buttons, labels, or text components can be reused and shared, reducing memory consumption.
+
+Another example is a **game** where objects like trees, rocks, or characters can share intrinsic data (such as texture, color, or type) while keeping their positions or sizes unique.
+
+The Flyweight pattern is particularly useful when dealing with systems that require a large number of similar objects, like text rendering engines, particle systems in games, or graphical object management systems. It optimizes memory usage and helps in managing a large number of instances effectively.
+
+------------------------------------------------------------------------------------
+
