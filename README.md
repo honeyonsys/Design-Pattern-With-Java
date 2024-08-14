@@ -1878,3 +1878,189 @@ Technical Lead: Issue not supported.
 - **Uncertain Handling**: There is no guarantee that the request will be handled, as it depends on the chain's structure. You may need a fallback mechanism for unhandled requests.
 
 The **Chain of Responsibility** pattern is ideal when there are multiple potential handlers for a request, but only one should handle it. It provides flexibility, decoupling, and a clean approach to handling requests in a system where many handlers might be involved.
+
+-----------------------------------------------------------------------------------------
+
+## The Command Design Pattern
+
+The **Command design pattern** is a behavioral design pattern that turns a request into a stand-alone object, which contains all the information about the request. This encapsulation allows for parameterizing methods with different requests, queuing requests, logging their execution, and supporting undoable operations.
+
+### Key Components of the Command Pattern
+
+1. **Command Interface**: This interface declares a method for executing commands.
+2. **Concrete Command**: A class that implements the `Command` interface and performs specific actions by invoking methods on a receiver.
+3. **Receiver**: The object that performs the actual work related to the command.
+4. **Invoker**: The object responsible for executing commands. It stores a command and calls its `execute()` method.
+5. **Client**: The client creates command objects and sets them in the invoker.
+
+### When to Use the Command Pattern
+
+- **Undo/Redo Functionality**: When you need to implement undo and redo actions in an application.
+  
+- **Parameterization of Actions**: When you need to parameterize objects with operations, like passing a command to an object to execute later.
+
+- **Request Queuing**: When you need to queue and execute requests at a later time, possibly in different order.
+
+- **Macro Commands**: When you need to group multiple commands into a single one (e.g., executing a series of commands in sequence).
+
+### Command Pattern Example
+
+Imagine a **smart home system** where a remote control can turn devices (lights, fans, etc.) on and off. Each device has specific operations, and we want to encapsulate these operations into command objects to be executed when the remote control buttons are pressed.
+
+### Java Implementation of Command Pattern
+
+#### Step 1: Command Interface
+The `Command` interface declares a method `execute()` for performing an action.
+
+```java
+// Command Interface
+interface Command {
+    void execute();
+}
+```
+
+#### Step 2: Receiver Class
+The receiver class knows how to perform the operations. Here, we have a `Light` class with `on()` and `off()` methods.
+
+```java
+// Receiver class
+class Light {
+    public void on() {
+        System.out.println("Light is ON");
+    }
+
+    public void off() {
+        System.out.println("Light is OFF");
+    }
+}
+```
+
+#### Step 3: Concrete Command Classes
+Concrete command classes implement the `Command` interface and encapsulate a receiver's action. For example, we have commands to turn the light on and off.
+
+```java
+// Concrete Command for turning on the light
+class LightOnCommand implements Command {
+    private Light light;
+
+    public LightOnCommand(Light light) {
+        this.light = light;
+    }
+
+    @Override
+    public void execute() {
+        light.on();
+    }
+}
+
+// Concrete Command for turning off the light
+class LightOffCommand implements Command {
+    private Light light;
+
+    public LightOffCommand(Light light) {
+        this.light = light;
+    }
+
+    @Override
+    public void execute() {
+        light.off();
+    }
+}
+```
+
+#### Step 4: Invoker Class
+The `Invoker` class is responsible for storing and invoking commands.
+
+```java
+// Invoker class (Remote Control)
+class RemoteControl {
+    private Command command;
+
+    // Set the command to be executed
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
+    // Execute the stored command
+    public void pressButton() {
+        command.execute();
+    }
+}
+```
+
+#### Step 5: Client Code
+The client configures the invoker with the appropriate commands.
+
+```java
+public class CommandPatternDemo {
+    public static void main(String[] args) {
+        // Receiver: Light
+        Light livingRoomLight = new Light();
+
+        // Concrete Commands
+        Command lightOnCommand = new LightOnCommand(livingRoomLight);
+        Command lightOffCommand = new LightOffCommand(livingRoomLight);
+
+        // Invoker: Remote Control
+        RemoteControl remote = new RemoteControl();
+
+        // Turn on the light
+        remote.setCommand(lightOnCommand);
+        remote.pressButton(); // Output: Light is ON
+
+        // Turn off the light
+        remote.setCommand(lightOffCommand);
+        remote.pressButton(); // Output: Light is OFF
+    }
+}
+```
+
+### Output
+
+```
+Light is ON
+Light is OFF
+```
+
+### Explanation
+
+- **Command Interface (`Command`)**: Declares the `execute()` method, which all concrete commands must implement.
+  
+- **Concrete Command (`LightOnCommand`, `LightOffCommand`)**: Encapsulate a receiver (the `Light` object) and define specific actions that invoke methods on the receiver.
+
+- **Receiver (`Light`)**: Contains the actual business logic that executes the action.
+
+- **Invoker (`RemoteControl`)**: Stores the command and triggers its execution when required.
+
+- **Client**: Sets up the command objects and assigns them to the invoker. The client doesn't need to know the details of how commands are executed.
+
+### Use Cases for the Command Pattern
+
+1. **Undo/Redo Functionality**: Since each command knows how to execute and reverse an operation, it’s perfect for undoable actions. Each action can store its reverse command (e.g., undo turning on a light by turning it off).
+
+2. **Macro Commands**: In a macro command, multiple commands can be grouped together and executed in sequence. For example, pressing one button could turn on the lights, start the fan, and play music.
+
+3. **Task Scheduling**: Commands can be queued and executed later. For example, in a task scheduler, you could queue a series of commands that need to be executed at specific times.
+
+4. **Callback Functionality**: When you need to send a callback to an object for execution later (e.g., GUI buttons where the action is not hard-coded).
+
+### Benefits of the Command Pattern
+
+1. **Decouples the Invoker and Receiver**: The invoker (e.g., remote control) doesn’t need to know which object (receiver) is performing the task. It just knows how to call the `execute()` method on a command.
+
+2. **Supports Undo/Redo Operations**: You can store the history of commands and reverse actions by calling undo commands.
+
+3. **Easily Extensible**: New commands can be added without modifying the invoker. You simply create new concrete command classes.
+
+4. **Encapsulates Actions**: Commands encapsulate all the details required to perform an action, making them easily transferable and reusable.
+
+### Real-World Examples of Command Pattern
+
+1. **GUI Buttons**: Buttons in a graphical user interface often use the Command pattern. The button stores a command, and when clicked, it invokes that command. The same button can trigger different actions by swapping the command at runtime.
+
+2. **Transaction Management**: In databases, a series of actions (e.g., SQL commands) can be treated as a command object. These can be queued, executed, and rolled back if necessary.
+
+3. **Home Automation**: A remote control for various smart devices (e.g., lights, thermostats, or appliances) uses the command pattern to control the devices with ease.
+
+The **Command design pattern** is a powerful way to encapsulate method calls, provide flexibility in scheduling and executing requests, and implement undo/redo functionality in a clean and structured way.
+
