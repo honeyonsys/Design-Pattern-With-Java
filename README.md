@@ -3460,3 +3460,209 @@ Adding Lemon
 The **Template Method pattern** is a powerful tool for defining the structure of an algorithm while allowing subclasses to customize specific steps, providing a clear and consistent approach to managing algorithmic processes and promoting code reuse.
 
 -------------------------------------------------------------------------------------
+
+## Visitor Design Pattern
+
+The **Visitor design pattern** is a behavioral pattern that allows you to define new operations on a set of objects without changing the classes of the elements on which it operates. This pattern is useful when you want to perform operations on a collection of objects that are of different types but have a common interface or base class.
+
+### Key Components of the Visitor Pattern
+
+1. **Visitor Interface**: Defines a visit operation for each type of element that can be visited. Each visit method corresponds to a different element type.
+
+2. **Concrete Visitors**: Implement the `Visitor` interface and provide specific implementations for the operations to be performed on each type of element.
+
+3. **Element Interface**: Defines an `accept` method that takes a `Visitor` as an argument. This method allows the visitor to perform operations on the element.
+
+4. **Concrete Elements**: Implement the `Element` interface and provide specific implementations for the `accept` method, which calls the appropriate visit method on the visitor.
+
+5. **Object Structure**: Maintains a collection of elements and allows visitors to traverse and operate on the elements.
+
+### When to Use the Visitor Pattern
+
+- **Adding Operations**: When you need to perform operations on elements of an object structure without changing the element classes.
+
+- **Separation of Concerns**: When you want to separate the algorithms or operations from the objects they operate on.
+
+- **Complex Operations**: When the operations on the elements are complex and vary depending on the element type.
+
+### Example of Visitor Pattern
+
+Let’s consider an example where we have a set of elements representing different types of shapes (e.g., `Circle`, `Rectangle`). We want to perform operations such as calculating the area and drawing the shapes without modifying the shape classes.
+
+### Java Implementation of Visitor Pattern
+
+#### Step 1: Visitor Interface
+Define a `Visitor` interface with a visit method for each type of element.
+
+```java
+// Visitor Interface
+interface ShapeVisitor {
+    void visit(Circle circle);
+    void visit(Rectangle rectangle);
+}
+```
+
+#### Step 2: Concrete Visitors
+Implement concrete visitor classes that provide specific operations for each type of element.
+
+```java
+// Concrete Visitor: Area Calculator
+class AreaCalculator implements ShapeVisitor {
+    @Override
+    public void visit(Circle circle) {
+        double area = Math.PI * Math.pow(circle.getRadius(), 2);
+        System.out.println("Circle Area: " + area);
+    }
+
+    @Override
+    public void visit(Rectangle rectangle) {
+        double area = rectangle.getWidth() * rectangle.getHeight();
+        System.out.println("Rectangle Area: " + area);
+    }
+}
+
+// Concrete Visitor: Drawer
+class ShapeDrawer implements ShapeVisitor {
+    @Override
+    public void visit(Circle circle) {
+        System.out.println("Drawing Circle with radius: " + circle.getRadius());
+    }
+
+    @Override
+    public void visit(Rectangle rectangle) {
+        System.out.println("Drawing Rectangle with width: " + rectangle.getWidth() + " and height: " + rectangle.getHeight());
+    }
+}
+```
+
+#### Step 3: Element Interface
+Define an `Element` interface with an `accept` method.
+
+```java
+// Element Interface
+interface Shape {
+    void accept(ShapeVisitor visitor);
+}
+```
+
+#### Step 4: Concrete Elements
+Implement concrete element classes that accept visitors.
+
+```java
+// Concrete Element: Circle
+class Circle implements Shape {
+    private double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    @Override
+    public void accept(ShapeVisitor visitor) {
+        visitor.visit(this);
+    }
+}
+
+// Concrete Element: Rectangle
+class Rectangle implements Shape {
+    private double width;
+    private double height;
+
+    public Rectangle(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    @Override
+    public void accept(ShapeVisitor visitor) {
+        visitor.visit(this);
+    }
+}
+```
+
+#### Step 5: Client Code
+Demonstrate how to use the Visitor pattern with the `Shape` elements and visitors.
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+public class VisitorPatternDemo {
+    public static void main(String[] args) {
+        List<Shape> shapes = new ArrayList<>();
+        shapes.add(new Circle(5));
+        shapes.add(new Rectangle(4, 6));
+
+        ShapeVisitor areaCalculator = new AreaCalculator();
+        ShapeVisitor shapeDrawer = new ShapeDrawer();
+
+        for (Shape shape : shapes) {
+            shape.accept(areaCalculator);
+            shape.accept(shapeDrawer);
+        }
+    }
+}
+```
+
+### Output
+
+```
+Circle Area: 78.53981633974483
+Drawing Circle with radius: 5.0
+Rectangle Area: 24.0
+Drawing Rectangle with width: 4.0 and height: 6.0
+```
+
+### Explanation
+
+- **Visitor Interface (`ShapeVisitor`)**: Defines methods for visiting different types of shapes (`Circle` and `Rectangle`).
+
+- **Concrete Visitors (`AreaCalculator` and `ShapeDrawer`)**: Implement specific operations (calculating area and drawing shapes) for each type of element.
+
+- **Element Interface (`Shape`)**: Defines the `accept` method that allows visitors to perform operations on the element.
+
+- **Concrete Elements (`Circle` and `Rectangle`)**: Implement the `accept` method to call the appropriate visit method on the visitor.
+
+### When to Use the Visitor Pattern
+
+1. **Extending Functionality**: When you need to add new operations or functionalities to an object structure without changing the existing element classes.
+
+2. **Separation of Concerns**: When you want to separate algorithms or operations from the objects they operate on, improving modularity and maintainability.
+
+3. **Complex Operations**: When operations on elements are complex and vary based on the element type, and you want to encapsulate these operations.
+
+### Benefits of the Visitor Pattern
+
+1. **Extensibility**: Allows you to add new operations without modifying the existing element classes.
+
+2. **Separation of Concerns**: Separates algorithms from the objects they operate on, making code easier to maintain and understand.
+
+3. **Single Responsibility Principle**: Each visitor class is responsible for a specific operation, adhering to the single responsibility principle.
+
+### Drawbacks of the Visitor Pattern
+
+1. **New Element Classes**: Adding new element types requires updating all visitor implementations, which can be cumbersome.
+
+2. **Complexity**: The pattern can add complexity, especially if there are many elements and visitors.
+
+### Real-World Examples of Visitor Pattern
+
+1. **Compilers**: Compilers use visitor patterns to perform different operations (e.g., type checking, code generation) on abstract syntax trees.
+
+2. **File System Operations**: Operations on files and directories (e.g., calculating size, generating reports) can be implemented using the visitor pattern.
+
+3. **Document Processing**: Processing different types of document elements (e.g., text, images, tables) for tasks such as formatting or exporting.
+
+The **Visitor pattern** is a powerful tool for performing operations on elements of an object structure while keeping the element classes unchanged, promoting separation of concerns, and enabling the addition of new operations in a modular and extensible way.
