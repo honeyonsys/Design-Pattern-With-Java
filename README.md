@@ -2064,3 +2064,165 @@ Light is OFF
 
 The **Command design pattern** is a powerful way to encapsulate method calls, provide flexibility in scheduling and executing requests, and implement undo/redo functionality in a clean and structured way.
 
+--------------------------------------------------------------------------------
+
+## Interpreter Design Pattern
+
+The **Interpreter design pattern** is a behavioral design pattern used to define a grammatical representation of a language and provide an interpreter to evaluate sentences in that language. It is particularly useful when you have a language with a simple grammar and you want to interpret or execute its sentences.
+
+### Key Components of the Interpreter Pattern
+
+1. **Abstract Expression**: Declares an interface for interpreting an operation.
+2. **Terminal Expression**: Implements the interpretation method for the simplest elements (terminal symbols) in the grammar.
+3. **Non-Terminal Expression**: Represents complex expressions, often defined recursively. These expressions can contain terminal expressions and other non-terminal expressions.
+4. **Context**: Contains global information that's shared across the interpreter.
+5. **Client**: The client builds the abstract syntax tree representing the language and invokes the `interpret` method to evaluate the expressions.
+
+### When to Use the Interpreter Pattern
+
+- When the grammar is simple and relatively stable.
+- When the language needs to be evaluated dynamically or at runtime.
+- When you need to interpret expressions, scripts, or rules that follow a specific grammar.
+
+### Example of Interpreter Pattern
+
+Consider an example where we want to evaluate simple mathematical expressions like `"3 + 2"` or `"5 - 1"`. We'll define an interpreter that can understand and compute these expressions.
+
+### Java Implementation of Interpreter Pattern
+
+#### Step 1: Expression Interface
+The `Expression` interface declares an `interpret` method that will be implemented by all concrete expression classes.
+
+```java
+// Abstract Expression
+interface Expression {
+    int interpret();
+}
+```
+
+#### Step 2: Terminal Expressions
+The terminal expressions represent the simplest form of expressions, such as numbers.
+
+```java
+// Terminal Expression for Numbers
+class NumberExpression implements Expression {
+    private int number;
+
+    public NumberExpression(int number) {
+        this.number = number;
+    }
+
+    @Override
+    public int interpret() {
+        return number;
+    }
+}
+```
+
+#### Step 3: Non-Terminal Expressions
+Non-terminal expressions represent more complex expressions, such as addition or subtraction, and are composed of simpler expressions (which may themselves be terminal or non-terminal).
+
+```java
+// Non-Terminal Expression for Addition
+class AddExpression implements Expression {
+    private Expression leftExpression;
+    private Expression rightExpression;
+
+    public AddExpression(Expression left, Expression right) {
+        this.leftExpression = left;
+        this.rightExpression = right;
+    }
+
+    @Override
+    public int interpret() {
+        return leftExpression.interpret() + rightExpression.interpret();
+    }
+}
+
+// Non-Terminal Expression for Subtraction
+class SubtractExpression implements Expression {
+    private Expression leftExpression;
+    private Expression rightExpression;
+
+    public SubtractExpression(Expression left, Expression right) {
+        this.leftExpression = left;
+        this.rightExpression = right;
+    }
+
+    @Override
+    public int interpret() {
+        return leftExpression.interpret() - rightExpression.interpret();
+    }
+}
+```
+
+#### Step 4: Client Code
+The client builds the expression tree and invokes the `interpret()` method to evaluate the expression.
+
+```java
+public class InterpreterPatternDemo {
+    public static void main(String[] args) {
+        // Represent the expression: (3 + 5) - 2
+        Expression three = new NumberExpression(3);
+        Expression five = new NumberExpression(5);
+        Expression two = new NumberExpression(2);
+
+        // (3 + 5)
+        Expression addExpression = new AddExpression(three, five);
+
+        // (3 + 5) - 2
+        Expression subtractExpression = new SubtractExpression(addExpression, two);
+
+        // Interpret the expression and print the result
+        System.out.println("(3 + 5) - 2 = " + subtractExpression.interpret());
+    }
+}
+```
+
+### Output
+
+```
+(3 + 5) - 2 = 6
+```
+
+### Explanation
+
+- **Expression Interface (`Expression`)**: Defines the `interpret` method, which all concrete expressions must implement.
+  
+- **Terminal Expressions (`NumberExpression`)**: Represents individual numbers in the expression. These are the leaf nodes of the expression tree.
+
+- **Non-Terminal Expressions (`AddExpression`, `SubtractExpression`)**: Represents more complex expressions that operate on other expressions (both terminal and non-terminal).
+
+- **Context (Not explicitly used)**: A context can be passed to the `interpret()` method to share information needed during interpretation (e.g., variable values, environment settings).
+
+### When to Use the Interpreter Pattern
+
+- **Script Languages**: When you need to interpret or execute simple scripting languages or rules (e.g., mathematical expressions, Boolean expressions).
+  
+- **Configuration File Parsing**: When a system needs to evaluate expressions or configurations dynamically based on a set of rules.
+
+- **Evaluating Grammars**: When a domain-specific language (DSL) is used, and you need to define how to interpret it.
+
+### Benefits of the Interpreter Pattern
+
+1. **Extendable**: New rules or operations can easily be added by creating new expression classes.
+  
+2. **Simple Grammar Parsing**: Useful for small languages where the grammar is simple, and parsing can be done efficiently.
+
+3. **Decoupling**: The grammar structure is separated from the logic that processes or interprets it, making the code more modular and easier to maintain.
+
+### Drawbacks of the Interpreter Pattern
+
+1. **Inefficiency**: The pattern can become inefficient when the grammar is complex, as the process of building and traversing the abstract syntax tree becomes expensive.
+
+2. **Complexity for Larger Grammars**: As the grammar becomes larger, the number of classes required to represent the grammar grows significantly, leading to increased complexity.
+
+### Real-World Examples of the Interpreter Pattern
+
+1. **SQL Query Interpreters**: Systems that dynamically build and evaluate SQL queries based on user input.
+  
+2. **Mathematical Expression Evaluators**: Calculators that evaluate user-defined formulas at runtime.
+
+3. **Regular Expression Engines**: Regular expressions often follow a grammar that is interpreted and matched against text patterns.
+
+The **Interpreter pattern** is ideal for interpreting sentences of a simple grammar, where the pattern of interpretation needs to be extendable and flexible. It’s most useful for small language processing, parsing, and configuration-based tasks.
