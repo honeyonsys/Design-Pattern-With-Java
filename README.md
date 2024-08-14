@@ -2226,3 +2226,186 @@ public class InterpreterPatternDemo {
 3. **Regular Expression Engines**: Regular expressions often follow a grammar that is interpreted and matched against text patterns.
 
 The **Interpreter pattern** is ideal for interpreting sentences of a simple grammar, where the pattern of interpretation needs to be extendable and flexible. It’s most useful for small language processing, parsing, and configuration-based tasks.
+
+------------------------------------------------------------------------------------------
+
+## Iterator Design Pattern
+
+The **Iterator design pattern** is a behavioral design pattern that provides a way to access the elements of an aggregate object (like a collection) sequentially without exposing its underlying representation. It separates the iteration logic from the collection logic, allowing you to traverse through the collection elements using a standard interface.
+
+### Key Components of the Iterator Pattern
+
+1. **Iterator**: An interface that defines the methods for iterating over the collection (e.g., `hasNext()`, `next()`).
+
+2. **Concrete Iterator**: Implements the `Iterator` interface and maintains the current position within the iteration of the collection.
+
+3. **Aggregate**: An interface that defines a method to create an iterator (e.g., `createIterator()`).
+
+4. **Concrete Aggregate**: Implements the `Aggregate` interface and returns an instance of the `Concrete Iterator`. It holds the collection of objects.
+
+### When to Use the Iterator Pattern
+
+- **Accessing Elements**: When you need to traverse or iterate through the elements of a collection.
+  
+- **Avoiding Exposure of Internal Representation**: When you want to provide access to the elements of a collection without exposing the underlying data structure.
+
+- **Multiple Iterators**: When you need to support multiple iterators on the same collection, allowing for different traversal strategies.
+
+### Example of Iterator Pattern
+
+Let's say we have a collection of `Book` objects and we want to iterate over them without exposing the internal representation of the collection. We'll implement the Iterator pattern to achieve this.
+
+### Java Implementation of Iterator Pattern
+
+#### Step 1: Iterator Interface
+Define the `Iterator` interface with methods for traversing the collection.
+
+```java
+// Iterator Interface
+interface Iterator {
+    boolean hasNext();
+    Object next();
+}
+```
+
+#### Step 2: Aggregate Interface
+Define the `Aggregate` interface with a method to create an iterator.
+
+```java
+// Aggregate Interface
+interface Aggregate {
+    Iterator createIterator();
+}
+```
+
+#### Step 3: Concrete Iterator
+Implement the `ConcreteIterator` that knows how to iterate over the collection.
+
+```java
+// Concrete Iterator
+class BookIterator implements Iterator {
+    private BookCollection collection;
+    private int index;
+
+    public BookIterator(BookCollection collection) {
+        this.collection = collection;
+        this.index = 0;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return index < collection.getSize();
+    }
+
+    @Override
+    public Object next() {
+        return collection.getBookAt(index++);
+    }
+}
+```
+
+#### Step 4: Concrete Aggregate
+Implement the `ConcreteAggregate` which holds the collection and provides an iterator.
+
+```java
+// Concrete Aggregate
+class BookCollection implements Aggregate {
+    private List<String> books;
+
+    public BookCollection() {
+        books = new ArrayList<>();
+    }
+
+    public void addBook(String book) {
+        books.add(book);
+    }
+
+    public String getBookAt(int index) {
+        return books.get(index);
+    }
+
+    public int getSize() {
+        return books.size();
+    }
+
+    @Override
+    public Iterator createIterator() {
+        return new BookIterator(this);
+    }
+}
+```
+
+#### Step 5: Client Code
+The client uses the iterator to traverse the collection.
+
+```java
+public class IteratorPatternDemo {
+    public static void main(String[] args) {
+        // Create and populate the collection
+        BookCollection bookCollection = new BookCollection();
+        bookCollection.addBook("The Catcher in the Rye");
+        bookCollection.addBook("To Kill a Mockingbird");
+        bookCollection.addBook("1984");
+
+        // Get the iterator and traverse the collection
+        Iterator iterator = bookCollection.createIterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
+    }
+}
+```
+
+### Output
+
+```
+The Catcher in the Rye
+To Kill a Mockingbird
+1984
+```
+
+### Explanation
+
+- **Iterator Interface (`Iterator`)**: Declares the `hasNext()` and `next()` methods for iterating over the collection elements.
+  
+- **Concrete Iterator (`BookIterator`)**: Implements the `Iterator` interface and provides the logic for iterating through the `BookCollection`.
+
+- **Aggregate Interface (`Aggregate`)**: Declares the method `createIterator()` for creating an iterator.
+
+- **Concrete Aggregate (`BookCollection`)**: Implements the `Aggregate` interface and manages the collection of books. It also provides the `createIterator()` method to return a new iterator.
+
+### When to Use the Iterator Pattern
+
+1. **Accessing Collection Elements**: When you need to iterate through the elements of a collection without exposing the internal structure of the collection.
+
+2. **Simplifying Traversal**: When you want a standard way to access elements of a collection, allowing clients to traverse through the collection in a consistent manner.
+
+3. **Multiple Traversals**: When you need to support multiple traversal strategies or need multiple iterators over the same collection.
+
+4. **Separating Concerns**: When you want to separate the iteration logic from the collection logic to adhere to the Single Responsibility Principle.
+
+### Benefits of the Iterator Pattern
+
+1. **Encapsulation**: Hides the internal representation of the collection and provides a standard way to traverse its elements.
+
+2. **Flexibility**: Allows for different types of iteration over the same collection without changing the collection itself.
+
+3. **Consistency**: Provides a consistent interface for traversing different types of collections, making the code more uniform and easier to understand.
+
+4. **Separation of Concerns**: Separates the logic for iterating through a collection from the collection logic, leading to better maintainability.
+
+### Drawbacks of the Iterator Pattern
+
+1. **Complexity**: For simple collections, implementing the Iterator pattern may introduce unnecessary complexity.
+
+2. **Performance**: Additional overhead of creating iterator objects and managing their state might impact performance in some cases.
+
+### Real-World Examples of Iterator Pattern
+
+1. **Java Collections Framework**: The `Iterator` interface in Java's Collections Framework provides a standard way to iterate over various types of collections (e.g., `ArrayList`, `HashSet`).
+
+2. **Navigation Systems**: Iterating through items in a navigation menu or toolbar, where each item needs to be accessed sequentially.
+
+3. **Database Result Sets**: Iterating through rows in a database result set, where each row represents a record in the database.
+
+The **Iterator pattern** is a powerful tool for traversing elements of a collection while maintaining encapsulation and providing a uniform interface for iteration. It's widely used in various programming scenarios where access to collection elements is required without exposing the underlying data structure.
