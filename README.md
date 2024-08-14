@@ -1527,3 +1527,165 @@ The Flyweight pattern is particularly useful when dealing with systems that requ
 
 ------------------------------------------------------------------------------------
 
+## Proxy Design Pattern
+
+The **Proxy** design pattern is a structural pattern that provides a placeholder or surrogate for another object to control access to it. A proxy acts as an intermediary between the client and the real object, offering additional functionalities like lazy initialization, access control, logging, or even caching, without changing the real object’s interface.
+
+### When to Use the Proxy Pattern
+
+1. **Lazy Initialization**: When you want to delay the creation or initialization of a resource until it’s actually needed. For example, in a complex or resource-heavy system (like opening a file or establishing a network connection).
+
+2. **Access Control**: When you need to control access to an object, such as in authentication or permission systems.
+
+3. **Logging or Auditing**: When you want to track or log operations performed on an object.
+
+4. **Remote Proxy**: When an object resides in a different address space or server, and the proxy provides access to it remotely (common in distributed systems).
+
+5. **Caching**: When you want to cache the results of expensive operations to avoid redundant computations.
+
+### Types of Proxies
+
+1. **Virtual Proxy**: Controls access to a resource that is expensive to create, like lazy initialization.
+   
+2. **Protection Proxy**: Controls access to a resource, based on user permissions or authentication.
+   
+3. **Remote Proxy**: Manages interactions between a client and an object in a different location, such as over a network.
+
+4. **Smart Proxy**: Adds additional functionality (like logging, reference counting) to manage the behavior of the real object.
+
+### Proxy Pattern Implementation in Java
+
+Let’s look at an example of a **virtual proxy** that delays the loading of an image file until it’s actually requested.
+
+#### Step 1: Subject Interface
+This defines the common interface between the real object and the proxy. Both will implement this interface.
+
+```java
+// Subject Interface
+interface Image {
+    void display();
+}
+```
+
+#### Step 2: Real Object
+This is the object that does the real work, such as loading and displaying an image.
+
+```java
+// Real Object
+class RealImage implements Image {
+    private String filename;
+
+    public RealImage(String filename) {
+        this.filename = filename;
+        loadImageFromDisk(); // Load image during construction
+    }
+
+    private void loadImageFromDisk() {
+        System.out.println("Loading image from disk: " + filename);
+    }
+
+    @Override
+    public void display() {
+        System.out.println("Displaying image: " + filename);
+    }
+}
+```
+
+#### Step 3: Proxy Object
+This proxy controls access to the `RealImage`. The image will only be loaded from disk when `display()` is called, demonstrating lazy initialization.
+
+```java
+// Proxy Object
+class ImageProxy implements Image {
+    private RealImage realImage;
+    private String filename;
+
+    public ImageProxy(String filename) {
+        this.filename = filename;
+    }
+
+    @Override
+    public void display() {
+        if (realImage == null) {
+            realImage = new RealImage(filename); // Lazy initialization
+        }
+        realImage.display();
+    }
+}
+```
+
+#### Step 4: Client Code
+The client interacts with the `Image` interface and doesn’t need to know whether it’s interacting with the proxy or the real object.
+
+```java
+public class ProxyPatternDemo {
+    public static void main(String[] args) {
+        Image image = new ImageProxy("photo.jpg");
+
+        // The image will be loaded from disk only when display is called
+        System.out.println("First call to display:");
+        image.display();
+
+        // The image will not be loaded again
+        System.out.println("\nSecond call to display:");
+        image.display();
+    }
+}
+```
+
+### Output
+
+```
+First call to display:
+Loading image from disk: photo.jpg
+Displaying image: photo.jpg
+
+Second call to display:
+Displaying image: photo.jpg
+```
+
+### Explanation
+
+- **Subject (`Image`)**: This is the common interface between `RealImage` (the real object) and `ImageProxy` (the proxy).
+  
+- **Real Object (`RealImage`)**: This class represents the actual object that performs the resource-intensive operations, like loading an image from disk.
+
+- **Proxy (`ImageProxy`)**: This class controls access to `RealImage`. It uses lazy initialization to delay the loading of the image until `display()` is called.
+
+- **Client**: The client code interacts with the `Image` interface, which is either a real object or a proxy, but it doesn't need to know the difference.
+
+### Benefits of the Proxy Pattern
+
+1. **Lazy Initialization**: The proxy delays the creation of a resource until it’s needed. This is useful for expensive resources like files, network connections, or large datasets.
+
+2. **Access Control**: The proxy can control access to the real object, enforcing permissions or authentication.
+
+3. **Separation of Concerns**: The proxy can handle additional responsibilities, like logging, caching, or auditing, without changing the real object’s code.
+
+4. **Remote Access**: Proxies can act as intermediaries in distributed systems, providing a local representation of a remote object.
+
+5. **Memory and Performance Optimization**: By creating and loading resources only when necessary, the proxy pattern can reduce memory usage and improve system performance.
+
+### Real-World Examples of the Proxy Pattern
+
+- **Remote Proxy**: Java’s **RMI (Remote Method Invocation)** framework uses proxies to provide access to objects located on remote machines.
+  
+- **Virtual Proxy**: Many GUI frameworks (e.g., image loading) use virtual proxies to display placeholder images until the real image is loaded.
+
+- **Protection Proxy**: Proxies can be used to control access to sensitive or restricted parts of a system. For example, a proxy might restrict access to certain files based on user permissions.
+
+- **Smart Proxy**: A proxy that manages reference counting or logging. In some systems, a smart proxy is used to track the number of references to an object and delete it when no references are left.
+
+### Considerations
+
+- **Increased Complexity**: The proxy pattern introduces an additional layer between the client and the real object, which can complicate the system design.
+
+- **Potential Performance Overhead**: While proxies can improve performance by reducing memory usage, they may introduce additional overhead by adding more method calls or performing additional tasks (like logging).
+
+### Example Scenario for Proxy
+
+Imagine a **banking system** where the customer data is sensitive and access to it should be controlled. A `CustomerProxy` class could be used to:
+- Ensure that only authenticated users can access certain operations on `Customer` objects.
+- Log all access to the customer data for audit purposes.
+
+The **Proxy** design pattern is very flexible and can be adapted to a wide range of use cases, such as enhancing performance, securing access, logging operations, and managing resources effectively. It provides a way to add functionality without modifying the existing classes, adhering to the Open/Closed principle.
