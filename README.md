@@ -3299,3 +3299,164 @@ Paid 300 using Bank Transfer: 9876543210
 3. **Route Calculation**: Different route-finding algorithms in GPS systems (e.g., shortest path, fastest route) that can be selected based on user preferences.
 
 The **Strategy pattern** is a versatile and powerful tool for managing different algorithms or behaviors in a flexible and maintainable way, allowing you to easily switch between different strategies and extend functionality without altering existing code.
+
+
+-------------------------------------------------------------------------------------
+
+## The Template Method Design Pattern
+
+The **Template Method design pattern** is a behavioral pattern that defines the structure of an algorithm in a base class but lets subclasses override specific steps of the algorithm without changing its overall structure. This pattern is useful when you have a sequence of operations that should be performed in a certain order, but some of the steps can vary depending on the subclass.
+
+### Key Components of the Template Method Pattern
+
+1. **Abstract Class**: Defines the template method which contains the algorithm’s skeleton. It may include some default implementation of steps and declare some steps as abstract, allowing subclasses to provide specific implementations.
+
+2. **Concrete Class**: Subclasses that implement or override the abstract steps of the template method. These classes provide specific implementations for the steps defined in the abstract class.
+
+3. **Template Method**: A method in the abstract class that defines the sequence of steps in the algorithm. It often calls abstract methods that need to be implemented by concrete subclasses.
+
+### When to Use the Template Method Pattern
+
+- **Fixed Algorithm Structure**: When you have an algorithm with a fixed sequence of steps, but some steps can vary depending on the subclass.
+
+- **Code Reuse**: To reuse common algorithmic code across multiple classes while allowing subclasses to define specific behavior.
+
+- **Avoid Duplication**: To avoid duplicating code for common operations that are shared across different subclasses.
+
+### Example of Template Method Pattern
+
+Let’s consider an example of a **coffee preparation** process. The process consists of several steps: boiling water, brewing coffee, pouring in a cup, and adding condiments. The steps for brewing coffee and adding condiments may vary depending on the type of coffee, but the overall process remains the same.
+
+### Java Implementation of Template Method Pattern
+
+#### Step 1: Abstract Class
+Define an abstract class with a template method that outlines the steps of the algorithm.
+
+```java
+// Abstract Class
+abstract class CoffeeTemplate {
+    // Template Method
+    public final void prepareRecipe() {
+        boilWater();
+        brewCoffee();
+        pourInCup();
+        addCondiments();
+    }
+
+    // Concrete Method
+    private void boilWater() {
+        System.out.println("Boiling water");
+    }
+
+    // Abstract Methods
+    protected abstract void brewCoffee();
+    protected abstract void addCondiments();
+
+    // Concrete Method
+    private void pourInCup() {
+        System.out.println("Pouring coffee into cup");
+    }
+}
+```
+
+#### Step 2: Concrete Classes
+Implement concrete classes that provide specific implementations for the abstract steps.
+
+```java
+// Concrete Class: Coffee
+class Coffee extends CoffeeTemplate {
+    @Override
+    protected void brewCoffee() {
+        System.out.println("Dripping Coffee through filter");
+    }
+
+    @Override
+    protected void addCondiments() {
+        System.out.println("Adding Sugar and Milk");
+    }
+}
+
+// Concrete Class: Tea
+class Tea extends CoffeeTemplate {
+    @Override
+    protected void brewCoffee() {
+        System.out.println("Steeping the tea");
+    }
+
+    @Override
+    protected void addCondiments() {
+        System.out.println("Adding Lemon");
+    }
+}
+```
+
+#### Step 3: Client Code
+Demonstrate how to use the Template Method pattern with the `Coffee` and `Tea` classes.
+
+```java
+public class TemplateMethodPatternDemo {
+    public static void main(String[] args) {
+        CoffeeTemplate coffee = new Coffee();
+        coffee.prepareRecipe();
+
+        System.out.println();
+
+        CoffeeTemplate tea = new Tea();
+        tea.prepareRecipe();
+    }
+}
+```
+
+### Output
+
+```
+Boiling water
+Dripping Coffee through filter
+Pouring coffee into cup
+Adding Sugar and Milk
+
+Boiling water
+Steeping the tea
+Pouring coffee into cup
+Adding Lemon
+```
+
+### Explanation
+
+- **Abstract Class (`CoffeeTemplate`)**: Defines the `prepareRecipe` method (template method) with a fixed sequence of steps for preparing a beverage. It includes concrete methods for common steps and abstract methods for steps that vary by subclass.
+
+- **Concrete Classes (`Coffee` and `Tea`)**: Provide specific implementations for the abstract steps (`brewCoffee` and `addCondiments`). The template method in the abstract class ensures that the sequence of steps is followed.
+
+### When to Use the Template Method Pattern
+
+1. **Common Algorithm Structure**: When you have a common algorithm or process with fixed steps and varying parts that need to be customized.
+
+2. **Code Reuse and Avoidance of Duplication**: When you want to avoid duplicating code for common operations while allowing subclasses to provide specific implementations.
+
+3. **Consistent Algorithm Execution**: When you want to ensure that a sequence of steps is always followed, but some steps can be customized by subclasses.
+
+### Benefits of the Template Method Pattern
+
+1. **Code Reuse**: Promotes reuse of common code and algorithms, reducing duplication.
+
+2. **Control over Algorithm Structure**: Provides a consistent and controlled way to execute an algorithm, ensuring that all steps are followed correctly.
+
+3. **Flexibility**: Allows subclasses to customize specific steps of the algorithm without changing its overall structure.
+
+### Drawbacks of the Template Method Pattern
+
+1. **Inheritance Dependency**: Relies on inheritance, which may not be ideal in cases where composition is preferred.
+
+2. **Complexity**: May add complexity if there are many steps or if the algorithm is highly variable.
+
+### Real-World Examples of Template Method Pattern
+
+1. **Recipe Preparation**: Recipes where the steps are fixed (e.g., mixing, baking) but the specific ingredients or methods may vary.
+
+2. **Game Development**: Game frameworks where the overall game loop is defined, but specific game logic and behaviors are implemented by subclasses.
+
+3. **Document Generation**: Document generation processes where the structure of the document is fixed, but the content and formatting may vary.
+
+The **Template Method pattern** is a powerful tool for defining the structure of an algorithm while allowing subclasses to customize specific steps, providing a clear and consistent approach to managing algorithmic processes and promoting code reuse.
+
+-------------------------------------------------------------------------------------
