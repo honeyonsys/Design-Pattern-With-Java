@@ -42,9 +42,9 @@ These design patterns are well-established solutions to common software design p
 
 -------------------------------------------------------------------------
 
-## <a name="singletonPattern">Singleton Design Pattern</a>
+## Singleton Design Pattern
 
-The Singleton design pattern is a creational pattern that ensures a class has only one instance and provides a global point of access to that instance. This pattern is useful when exactly one object is needed to coordinate actions across the system.
+<a name="singletonPattern">The Singleton design</a> pattern is a creational pattern that ensures a class has only one instance and provides a global point of access to that instance. This pattern is useful when exactly one object is needed to coordinate actions across the system.
 
 ### When to Use Singleton
 
