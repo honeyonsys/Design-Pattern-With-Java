@@ -5,9 +5,9 @@ All design patterns explained with the java code example
 Creational design patterns deal with object creation mechanisms, aiming to create objects in a manner suitable to the situation.
 
 1. [**Singleton**](#singletonPattern): Ensures that a class has only one instance and provides a global point of access to it.
-2. **Factory Method**: Defines an interface for creating an object but lets subclasses alter the type of objects that will be created.
-3. **Abstract Factory**: Provides an interface for creating families of related or dependent objects without specifying their concrete classes.
-4. **Builder**: Separates the construction of a complex object from its representation so that the same construction process can create different representations.
+2. [**Factory Method**](#factoryPattern): Defines an interface for creating an object but lets subclasses alter the type of objects that will be created.
+3. [**Abstract Factory**](#abstractFactory): Provides an interface for creating families of related or dependent objects without specifying their concrete classes.
+4. [**Builder**](#builderPattern): Separates the construction of a complex object from its representation so that the same construction process can create different representations.
 5. **Prototype**: Specifies the kinds of objects to create using a prototypical instance and creates new objects by copying this prototype.
 
 ### Structural Patterns
@@ -42,9 +42,9 @@ These design patterns are well-established solutions to common software design p
 
 -------------------------------------------------------------------------
 
-## Singleton Design Pattern
+## <a name="singletonPattern">Singleton Design Pattern</a>
 
-<a name="singletonPattern">The Singleton design</a> pattern is a creational pattern that ensures a class has only one instance and provides a global point of access to that instance. This pattern is useful when exactly one object is needed to coordinate actions across the system.
+The Singleton design pattern is a creational pattern that ensures a class has only one instance and provides a global point of access to that instance. This pattern is useful when exactly one object is needed to coordinate actions across the system.
 
 ### When to Use Singleton
 
@@ -130,7 +130,7 @@ Overall, the Singleton pattern is a useful tool when you need to ensure that a c
 
 --------------------------------------------------------------------------------
 
-## Factory Method Design Pattern
+## <a name="factoryPattern"> Factory Method Design Pattern</a>
 
 The Factory Method design pattern is a creational pattern that defines an interface for creating objects but allows subclasses to alter the type of objects that will be created. This pattern promotes loose coupling by reducing the dependency of the code on specific classes.
 
@@ -241,7 +241,7 @@ The Factory Method pattern is an excellent choice when you need flexibility in t
 
 -------------------------------------------------------------------------------------------
 
-## Abstract Factory
+## <a name="abstractFactory">Abstract Factory</a>
 
 The Abstract Factory design pattern is a creational pattern that provides an interface for creating families of related or dependent objects without specifying their concrete classes. This pattern is particularly useful when a system needs to be independent of how its objects are created, composed, and represented.
 
@@ -406,7 +406,7 @@ Overall, the Abstract Factory pattern is a powerful tool for managing complex sy
 
 ------------------------------------------------------------------------------------------
 
-## Builder Design Pattern
+## <a href="builderPattern">Builder Design Pattern</a>
 
 The Builder design pattern is a creational pattern used to construct complex objects step by step. It separates the construction of a complex object from its representation, allowing the same construction process to create different representations. The Builder pattern is particularly useful when an object requires numerous parameters or when complex initialization is needed.
 
