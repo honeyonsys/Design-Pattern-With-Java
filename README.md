@@ -4,7 +4,7 @@ All design patterns explained with the java code example
 ### Creational Patterns
 Creational design patterns deal with object creation mechanisms, aiming to create objects in a manner suitable to the situation.
 
-1. <a name="singletonPattern">**Singleton**: </a>Ensures that a class has only one instance and provides a global point of access to it.
+1. [**Singleton**](#singletonPattern): Ensures that a class has only one instance and provides a global point of access to it.
 2. **Factory Method**: Defines an interface for creating an object but lets subclasses alter the type of objects that will be created.
 3. **Abstract Factory**: Provides an interface for creating families of related or dependent objects without specifying their concrete classes.
 4. **Builder**: Separates the construction of a complex object from its representation so that the same construction process can create different representations.
@@ -42,7 +42,7 @@ These design patterns are well-established solutions to common software design p
 
 -------------------------------------------------------------------------
 
-## [Singleton Design Pattern](#singletonPattern)
+## <a name="singletonPattern">Singleton Design Pattern</a>
 
 The Singleton design pattern is a creational pattern that ensures a class has only one instance and provides a global point of access to that instance. This pattern is useful when exactly one object is needed to coordinate actions across the system.
 
