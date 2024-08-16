@@ -8,18 +8,18 @@ Creational design patterns deal with object creation mechanisms, aiming to creat
 2. [**Factory Method**](#factoryPattern): Defines an interface for creating an object but lets subclasses alter the type of objects that will be created.
 3. [**Abstract Factory**](#abstractFactory): Provides an interface for creating families of related or dependent objects without specifying their concrete classes.
 4. [**Builder**](#builderPattern): Separates the construction of a complex object from its representation so that the same construction process can create different representations.
-5. **Prototype**: Specifies the kinds of objects to create using a prototypical instance and creates new objects by copying this prototype.
+5. [**Prototype**](#prototypePattern): Specifies the kinds of objects to create using a prototypical instance and creates new objects by copying this prototype.
 
 ### Structural Patterns
 Structural patterns deal with object composition or the way classes and objects are composed to form larger structures.
 
-6. **Adapter**: Allows the interface of an existing class to be used as another interface.
-7. **Bridge**: Separates an object’s interface from its implementation, allowing the two to vary independently.
-8. **Composite**: Composes objects into tree structures to represent part-whole hierarchies. It allows clients to treat individual objects and compositions uniformly.
-9. **Decorator**: Attaches additional responsibilities to an object dynamically. Decorators provide a flexible alternative to subclassing for extending functionality.
-10. **Facade**: Provides a simplified interface to a complex subsystem.
-11. **Flyweight**: Uses sharing to support large numbers of fine-grained objects efficiently.
-12. **Proxy**: Provides a surrogate or placeholder for another object to control access to it.
+6. [**Adapter**](#adapterDesignPattern): Allows the interface of an existing class to be used as another interface.
+7. [**Bridge**](#bridgeDesignPattern): Separates an object’s interface from its implementation, allowing the two to vary independently.
+8. [**Composite**](#compositeDesignPattern): Composes objects into tree structures to represent part-whole hierarchies. It allows clients to treat individual objects and compositions uniformly.
+9. [**Decorator**](#decoratorDesignPattern): Attaches additional responsibilities to an object dynamically. Decorators provide a flexible alternative to subclassing for extending functionality.
+10. [**Facade**](#facadeDesignPattern): Provides a simplified interface to a complex subsystem.
+11. [**Flyweight**](#flyweighDesignPattern): Uses sharing to support large numbers of fine-grained objects efficiently.
+12. [**Proxy**](#proxyDesignPattern): Provides a surrogate or placeholder for another object to control access to it.
 
 ### Behavioral Patterns
 Behavioral patterns are concerned with algorithms and the assignment of responsibilities between objects.
@@ -564,7 +564,7 @@ The Builder pattern is a powerful tool for constructing complex objects with num
 
 ----------------------------------------------------------------------------------
 
-## Prototype Design Pattern
+## <a name="prototypePattern">Prototype Design Pattern</a>
 
 The Prototype design pattern is a creational pattern that allows objects to be cloned to produce new objects. Instead of creating new instances from scratch, the Prototype pattern provides a way to copy or clone existing objects, thus enhancing performance and simplifying object creation when the cost of creating a new instance is more expensive than copying an existing one.
 
@@ -713,7 +713,7 @@ The Prototype pattern is particularly effective when you need to create many sim
 
 -----------------------------------------------------------------------------------
 
-## Adapter Design Pattern
+## <a name="adapterDesignPattern">Adapter Design Pattern</a>
 
 The Adapter design pattern is a structural pattern that allows incompatible interfaces to work together. It acts as a bridge between two incompatible interfaces by wrapping an existing class with a new interface. The Adapter pattern is particularly useful when you need to integrate a class into your application that doesn’t match the existing interfaces.
 
@@ -840,7 +840,7 @@ The Adapter pattern is an effective way to enable incompatible interfaces to wor
 
 -----------------------------------------------------------------------------------
 
-## The bridge Design Pattern
+## <a href="bridgeDesignPattern">The bridge Design Pattern</a>
 
 The Bridge design pattern is a structural pattern that separates an abstraction from its implementation, allowing both to evolve independently. This pattern is used to bridge the gap between an abstraction and its implementation, providing a way to vary both independently without affecting the other.
 
@@ -963,7 +963,7 @@ The Bridge pattern is an effective way to handle situations where you need to ma
 
 ---------------------------------------------------------------------------------
 
-## The Composite Design Pattern
+## <a href="compositeDesignPattern">The Composite Design Pattern</a>
 
 The Composite design pattern is a structural pattern that allows you to compose objects into tree structures to represent part-whole hierarchies. It lets clients treat individual objects and compositions of objects uniformly. In other words, the Composite pattern allows you to group objects into a tree structure and work with these objects as if they were individual objects.
 
@@ -1105,7 +1105,7 @@ The Composite pattern is ideal for scenarios where you need to work with tree-li
 
 ----------------------------------------------------------------------------------
 
-## Decorator Design Pattern
+## <a href="decoratorDesignPattern">Decorator Design Pattern</a>
 
 The Decorator design pattern is a structural pattern that allows you to add new behaviors to objects dynamically without altering their structure. It provides a flexible alternative to subclassing for extending functionality, making it possible to enhance or modify an object’s behavior at runtime by wrapping it with one or more decorator objects.
 
@@ -1255,7 +1255,7 @@ The Decorator pattern is a powerful tool when you need to dynamically add or cha
 
 ---------------------------------------------------------------------------------
 
-## The Facade Design Pattern
+## <a href="facadeDesignPattern">The Facade Design Pattern</a>
 
 The **Facade** design pattern is a structural pattern that provides a simplified interface to a complex system, library, or framework. It hides the complexities of the system and provides a single entry point through which clients can interact with the system. The goal is to make the system easier to use by reducing the number of methods a client has to deal with and to make the interface more intuitive.
 
@@ -1383,7 +1383,7 @@ The **Facade** pattern is an excellent choice when you need to simplify complex 
 
 ----------------------------------------------------------------------------------
 
-## Flyweight Design Pattern
+## <a href="flyweighDesignPattern">Flyweight Design Pattern</a>
 
 The **Flyweight** design pattern is a structural pattern used to minimize memory usage and improve performance by sharing as much data as possible between similar objects. It is especially useful when you need to create a large number of objects that share some common data.
 
@@ -1527,7 +1527,7 @@ The Flyweight pattern is particularly useful when dealing with systems that requ
 
 ------------------------------------------------------------------------------------
 
-## Proxy Design Pattern
+## <a href="proxyDesignPattern">Proxy Design Pattern</a>
 
 The **Proxy** design pattern is a structural pattern that provides a placeholder or surrogate for another object to control access to it. A proxy acts as an intermediary between the client and the real object, offering additional functionalities like lazy initialization, access control, logging, or even caching, without changing the real object’s interface.
 
