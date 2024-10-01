@@ -36,6 +36,24 @@ Behavioral patterns are concerned with algorithms and the assignment of responsi
 22. [**Template Method**](#templateMethodDesignPattern): Defines the skeleton of an algorithm in an operation, deferring some steps to subclasses.
 23. [**Visitor**](#visitorDesignPattern): Represents an operation to be performed on the elements of an object structure. It lets you define a new operation without changing the classes of the elements on which it operates.
 
+
+### Architechtural Design Patterns
+
+24. **Model-View-Controller (MVC)**: Separates an application into three interconnected components—Model, View, and Controller—to organize business logic, UI, and input handling.
+
+25. **Microservices**: An architectural style that structures an application as a collection of small, independent services that can be developed and deployed separately.
+
+26. **Layered Architecture**: Organizes an application into layers (e.g., presentation, business logic, data access), where each layer is responsible for specific tasks.
+
+27. **Event-Driven Architecture**: A system design in which components communicate through events, with the flow of execution driven by the occurrence of specific events.
+
+28. **Service-Oriented Architecture (SOA)**: A pattern where applications are built by reusing interoperable services, with each service being a discrete unit of business functionality.
+
+29. **Pipe and Filter**: A design pattern that decomposes a task into a sequence of processing elements (filters), where the output of one filter is the input to the next (pipes).
+
+30. **CQRS (Command Query Responsibility Segregation)**: Separates read and write operations in an application, allowing more efficient scaling and optimizing data handling.
+
+
 These design patterns are well-established solutions to common software design problems and are widely used in software engineering to improve code flexibility, scalability, and maintainability.
 
 
@@ -3666,3 +3684,198 @@ Drawing Rectangle with width: 4.0 and height: 6.0
 3. **Document Processing**: Processing different types of document elements (e.g., text, images, tables) for tasks such as formatting or exporting.
 
 The **Visitor pattern** is a powerful tool for performing operations on elements of an object structure while keeping the element classes unchanged, promoting separation of concerns, and enabling the addition of new operations in a modular and extensible way.
+
+
+-------------------------------------------------------------------------
+### **Model-View-Controller (MVC) Design Pattern**
+
+The **Model-View-Controller (MVC)** is an architectural pattern that separates an application into three main components: **Model**, **View**, and **Controller**. This separation helps in organizing the codebase, making it easier to manage, scale, and test.
+
+#### **Key Components of MVC:**
+
+1. **Model**: 
+   - The Model represents the application's data and business logic.
+   - It is responsible for handling data, interacting with databases, and implementing business rules.
+   - It does not depend on the View or Controller, making it reusable and easy to test.
+
+2. **View**:
+   - The View is responsible for rendering the user interface (UI) and displaying data from the Model.
+   - It only knows how to display data; it does not contain any business logic.
+   - Views observe the Model and update whenever the Model changes.
+
+3. **Controller**:
+   - The Controller acts as the intermediary between the Model and View.
+   - It listens to user inputs (e.g., button clicks, form submissions), processes those inputs (e.g., updating the Model), and decides which View to render.
+   - The Controller updates the Model or View based on user actions.
+
+#### **When to Use MVC Pattern:**
+
+- **Large-scale applications**: It is particularly useful when you need to separate concerns in complex applications to make maintenance easier.
+- **Web applications**: Most web frameworks (like Spring MVC, Ruby on Rails) use the MVC pattern.
+- **Multiple views of the same data**: When different views of the same data need to be rendered, MVC ensures the underlying data is updated in a centralized way (via the Model).
+- **Testability**: By separating logic, MVC makes it easier to test individual components (e.g., testing the Model without worrying about UI).
+
+#### **How MVC Works (Flow):**
+1. The **View** renders the UI and waits for user input.
+2. When the user interacts with the View (e.g., clicks a button), the **Controller** handles the input and updates the **Model**.
+3. The **Model** processes the input, updates the data, and notifies the **View**.
+4. The **View** reflects the updated data.
+
+---
+
+#### **Example in Java:**
+
+Let's demonstrate the MVC pattern with a simple example: a **Student Registration** system.
+
+##### 1. **Model:**
+The Model holds the student data (like name and roll number).
+
+```java
+// Model: Represents Student Data
+public class Student {
+    private String rollNo;
+    private String name;
+
+    public String getRollNo() {
+        return rollNo;
+    }
+
+    public void setRollNo(String rollNo) {
+        this.rollNo = rollNo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
+
+##### 2. **View:**
+The View is responsible for rendering the student's details.
+
+```java
+// View: Responsible for displaying student details
+public class StudentView {
+    public void printStudentDetails(String studentName, String studentRollNo) {
+        System.out.println("Student: ");
+        System.out.println("Name: " + studentName);
+        System.out.println("Roll No: " + studentRollNo);
+    }
+}
+```
+
+##### 3. **Controller:**
+The Controller updates the Model and tells the View to update the displayed data.
+
+```java
+// Controller: Manages communication between Model and View
+public class StudentController {
+    private Student model;
+    private StudentView view;
+
+    public StudentController(Student model, StudentView view) {
+        this.model = model;
+        this.view = view;
+    }
+
+    public void setStudentName(String name) {
+        model.setName(name);
+    }
+
+    public String getStudentName() {
+        return model.getName();
+    }
+
+    public void setStudentRollNo(String rollNo) {
+        model.setRollNo(rollNo);
+    }
+
+    public String getStudentRollNo() {
+        return model.getRollNo();
+    }
+
+    public void updateView() {
+        view.printStudentDetails(model.getName(), model.getRollNo());
+    }
+}
+```
+
+##### 4. **Main:**
+The Main class is where the application is put together and run.
+
+```java
+public class MVCPatternDemo {
+    public static void main(String[] args) {
+        // Fetch student record from the database (simulated here)
+        Student model = retrieveStudentFromDatabase();
+
+        // Create a view to display student details
+        StudentView view = new StudentView();
+
+        // Create the controller
+        StudentController controller = new StudentController(model, view);
+
+        // Initial display of student data
+        controller.updateView();
+
+        // Update the model data
+        controller.setStudentName("John Doe");
+        controller.setStudentRollNo("S12345");
+
+        // Update the view with new data
+        controller.updateView();
+    }
+
+    // Simulated method to retrieve data from a database
+    private static Student retrieveStudentFromDatabase() {
+        Student student = new Student();
+        student.setName("Alice Smith");
+        student.setRollNo("A12345");
+        return student;
+    }
+}
+```
+
+---
+
+#### **Output:**
+
+```
+Student:
+Name: Alice Smith
+Roll No: A12345
+
+Student:
+Name: John Doe
+Roll No: S12345
+```
+
+---
+
+### **When to Use MVC:**
+
+- **Web and desktop applications**: MVC is commonly used in web development frameworks (e.g., Spring MVC, ASP.NET MVC, Ruby on Rails) and desktop GUI applications.
+- **Improved Testability**: MVC allows for easy unit testing. You can test the **Controller** logic, **Model** logic, and **View** rendering separately.
+- **Maintainability**: By separating concerns, each part of the system can be modified independently. For example, changing the business logic in the **Model** doesn't affect the UI in the **View**.
+
+---
+
+### **Advantages of MVC:**
+
+- **Separation of Concerns**: Clear separation between data (Model), UI (View), and input handling (Controller).
+- **Flexibility**: Can have multiple Views for the same Model.
+- **Testability**: Easier to test each component independently.
+- **Maintainability**: Code is more organized and maintainable.
+
+### **Disadvantages of MVC:**
+
+- **Complexity**: In small applications, MVC might be overkill and add unnecessary complexity.
+- **Increased Learning Curve**: Developers need to understand the responsibilities of each component and how they interact.
+
+---
+
+MVC is a highly versatile pattern that is especially useful for creating organized, scalable applications where separation of logic, data, and UI is critical. Its usage is common in **web development frameworks** and larger software projects that benefit from modularity and maintainability.
