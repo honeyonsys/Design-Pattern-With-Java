@@ -24,17 +24,17 @@ Structural patterns deal with object composition or the way classes and objects 
 ### Behavioral Patterns
 Behavioral patterns are concerned with algorithms and the assignment of responsibilities between objects.
 
-13. **Chain of Responsibility**: Passes a request along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain.
-14. **Command**: Encapsulates a request as an object, thereby allowing for parameterization of clients with queues, requests, and operations.
-15. **Interpreter**: Defines a representation for a grammar and an interpreter to deal with this grammar.
-16. **Iterator**: Provides a way to access the elements of an aggregate object sequentially without exposing its underlying representation.
-17. **Mediator**: Defines an object that encapsulates how a set of objects interact. It promotes loose coupling by keeping objects from referring to each other explicitly.
-18. **Memento**: Without violating encapsulation, captures and externalizes an object’s internal state, allowing the object to be restored to this state later.
-19. **Observer**: Defines a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.
-20. **State**: Allows an object to alter its behavior when its internal state changes. The object will appear to change its class.
-21. **Strategy**: Defines a family of algorithms, encapsulates each one, and makes them interchangeable. It lets the algorithm vary independently from the clients that use it.
-22. **Template Method**: Defines the skeleton of an algorithm in an operation, deferring some steps to subclasses.
-23. **Visitor**: Represents an operation to be performed on the elements of an object structure. It lets you define a new operation without changing the classes of the elements on which it operates.
+13. [**Chain of Responsibility**](#chainOfResponsibility): Passes a request along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain.
+14. [**Command**](#commandPattern): Encapsulates a request as an object, thereby allowing for parameterization of clients with queues, requests, and operations.
+15. [**Interpreter**](#interpreterDesignPattern): Defines a representation for a grammar and an interpreter to deal with this grammar.
+16. [**Iterator**](#iteratorDesignPattern): Provides a way to access the elements of an aggregate object sequentially without exposing its underlying representation.
+17. [**Mediator**](#mediatorDesignPattern): Defines an object that encapsulates how a set of objects interact. It promotes loose coupling by keeping objects from referring to each other explicitly.
+18. [**Memento**](#mementoDesignPattern): Without violating encapsulation, captures and externalizes an object’s internal state, allowing the object to be restored to this state later.
+19. [**Observer**](#observerDesignPattern): Defines a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.
+20. [**State**](#stateDesignPattern): Allows an object to alter its behavior when its internal state changes. The object will appear to change its class.
+21. [**Strategy**](#strategyDesignPattern): Defines a family of algorithms, encapsulates each one, and makes them interchangeable. It lets the algorithm vary independently from the clients that use it.
+22. [**Template Method**](#templateMethodDesignPattern): Defines the skeleton of an algorithm in an operation, deferring some steps to subclasses.
+23. [**Visitor**](#visitorDesignPattern): Represents an operation to be performed on the elements of an object structure. It lets you define a new operation without changing the classes of the elements on which it operates.
 
 These design patterns are well-established solutions to common software design problems and are widely used in software engineering to improve code flexibility, scalability, and maintainability.
 
@@ -1692,7 +1692,7 @@ The **Proxy** design pattern is very flexible and can be adapted to a wide range
 
 ------------------------------------------------------------------------------------------
 
-## Chain of responsibility
+## <a href="chainOfResponsibility">Chain of responsibility</a>
 
 The **Chain of Responsibility** pattern is a behavioral design pattern that allows multiple objects (handlers) to process a request without the sender needing to know which handler will process it. This chain allows multiple handlers to either process the request or pass it along the chain to the next handler.
 
@@ -1881,7 +1881,7 @@ The **Chain of Responsibility** pattern is ideal when there are multiple potenti
 
 -----------------------------------------------------------------------------------------
 
-## The Command Design Pattern
+## <a href="commandPattern">The Command Design Pattern</a>
 
 The **Command design pattern** is a behavioral design pattern that turns a request into a stand-alone object, which contains all the information about the request. This encapsulation allows for parameterizing methods with different requests, queuing requests, logging their execution, and supporting undoable operations.
 
@@ -2066,7 +2066,7 @@ The **Command design pattern** is a powerful way to encapsulate method calls, pr
 
 --------------------------------------------------------------------------------
 
-## Interpreter Design Pattern
+## <a href="interpreterDesignPattern">Interpreter Design Pattern</a>
 
 The **Interpreter design pattern** is a behavioral design pattern used to define a grammatical representation of a language and provide an interpreter to evaluate sentences in that language. It is particularly useful when you have a language with a simple grammar and you want to interpret or execute its sentences.
 
@@ -2229,7 +2229,7 @@ The **Interpreter pattern** is ideal for interpreting sentences of a simple gram
 
 ------------------------------------------------------------------------------------------
 
-## Iterator Design Pattern
+## <a href="iteratorDesignPattern">Iterator Design Pattern</a>
 
 The **Iterator design pattern** is a behavioral design pattern that provides a way to access the elements of an aggregate object (like a collection) sequentially without exposing its underlying representation. It separates the iteration logic from the collection logic, allowing you to traverse through the collection elements using a standard interface.
 
@@ -2413,7 +2413,7 @@ The **Iterator pattern** is a powerful tool for traversing elements of a collect
 
 ----------------------------------------------------------------------------------------
 
-## Mediator Design Pattern
+## <a href="mediatorDesignPattern">Mediator Design Pattern</a>
 
 The **Mediator design pattern** is a behavioral design pattern that defines an object that encapsulates how a set of objects interact. This pattern is used to reduce the complexity of communication between multiple objects or classes by centralizing the communication logic in a single mediator object. It promotes loose coupling and easier maintenance by preventing objects from referring to each other explicitly.
 
@@ -2607,7 +2607,7 @@ The **Mediator pattern** is valuable for managing complex interactions between m
 
 -----------------------------------------------------------------------------------------
 
-## Memento Design Pattern
+## <a href="mementoDesignPattern">Memento Design Pattern</a>
 
 The **Memento design pattern** is a behavioral design pattern that allows an object to capture and externalize its internal state without violating encapsulation, so that the object can be restored to that state later. This pattern is useful for implementing undo/redo functionality, saving the state of an object at a given point in time, or for managing checkpoints.
 
@@ -2777,7 +2777,7 @@ The **Memento pattern** is a powerful tool for managing object states and implem
 
 -----------------------------------------------------------------------------------
 
-## Observer Design Pattern
+## <a href="observerDesignPattern">Observer Design Pattern</a>
 
 The **Observer design pattern** is a behavioral pattern that defines a one-to-many dependency between objects. This allows one object (the **subject**) to notify multiple dependent objects (the **observers**) of any state changes, usually by calling one of their methods. This pattern is useful for implementing distributed event-handling systems and is commonly used in scenarios where changes in one part of a system need to be automatically propagated to other parts.
 
@@ -2964,7 +2964,7 @@ The **Observer pattern** is a powerful tool for implementing distributed event-h
 
 ------------------------------------------------------------------------------------------
 
-## The State Design Pattern
+## <a href="stateDesignPattern">The State Design Pattern</a>
 
 The **State design pattern** is a behavioral pattern that allows an object to change its behavior when its internal state changes. The pattern encapsulates state-specific behavior in separate state classes, making it easier to manage and modify state-dependent behavior without changing the context (the object that maintains the state).
 
@@ -3124,7 +3124,7 @@ The **State pattern** is a powerful tool for managing state-dependent behavior i
 
 ----------------------------------------------------------------------------------------
 
-## Strategy Design Pattern
+## <a href="strategyDesignPattern">Strategy Design Pattern</a>
 
 The **Strategy design pattern** is a behavioral pattern that defines a family of algorithms, encapsulates each algorithm, and makes them interchangeable. This allows the algorithm to vary independently from clients that use it. The Strategy pattern is used to enable selecting an algorithm's implementation at runtime, making it easier to switch between different strategies without altering the client code.
 
@@ -3303,7 +3303,7 @@ The **Strategy pattern** is a versatile and powerful tool for managing different
 
 -------------------------------------------------------------------------------------
 
-## The Template Method Design Pattern
+## <a href="templateMethodDesignPattern">The Template Method Design Pattern</a>
 
 The **Template Method design pattern** is a behavioral pattern that defines the structure of an algorithm in a base class but lets subclasses override specific steps of the algorithm without changing its overall structure. This pattern is useful when you have a sequence of operations that should be performed in a certain order, but some of the steps can vary depending on the subclass.
 
@@ -3461,7 +3461,7 @@ The **Template Method pattern** is a powerful tool for defining the structure of
 
 -------------------------------------------------------------------------------------
 
-## Visitor Design Pattern
+## <a href="visitorDesignPattern">Visitor Design Pattern</a>
 
 The **Visitor design pattern** is a behavioral pattern that allows you to define new operations on a set of objects without changing the classes of the elements on which it operates. This pattern is useful when you want to perform operations on a collection of objects that are of different types but have a common interface or base class.
 
